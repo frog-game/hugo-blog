@@ -30,7 +30,7 @@ cover:
 
 ## 1. 网络编程流程
 
-![](https://github.com/frog-game/typora-notes/blob/main/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E7%BD%91%E7%BB%9C/image/%E7%BD%91%E7%BB%9CIO%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BB%93.assets//image-20220912104923737.png)
+![](https://ts1.cn.mm.bing.net/th/id/R-C.e1b1a29d260e719b3bd3490087b3e57b?rik=9VqTpu%2fLX0IVFQ&riu=http%3a%2f%2fimages.shejidaren.com%2fwp-content%2fuploads%2f2013%2f06%2f041811jTi.jpg&ehk=ZFq0gZwICLu2oj4LYTfxxGyfpCL6%2bRly26Jdcm21ME4%3d&risl=&pid=ImgRaw&r=0)
 
 ## 2. 堵塞IO
 
