@@ -42,7 +42,7 @@ languages:
         imageWidth: 150
         imageHeight: 150
         buttons:
-          - name: 🧱 心得
+          - name: 🧱 搬砖
             url: posts/blog
           - name: 👨🏻‍💻 技术
             url: posts/tech
