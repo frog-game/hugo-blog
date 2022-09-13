@@ -42,11 +42,11 @@ LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
 >
 >   ```
 >   LUA_MASKCALL : 调用函数时回调
->  
+>    
 >   LUA_MASKRET :函数返回时回调
->  
+>    
 >   LUA_MASKLINE :执行一行代码时候回调
->  
+>    
 >   LUA_MASKCOUNT :每执行count条指令时候回调
 >   ```
 > - count：只有掩码包含LUA_MASKCOUNT 这个状态时候才有效果，代表执行count次才会回调一次钩子函数
@@ -795,15 +795,15 @@ bool Debugger::DoHitCondition(std::shared_ptr<BreakPoint> bp)
 
 #### 4.1.1. 多虚拟机测试
 
-<iframe src="https://player.bilibili.com/player.html?aid=638985869&bvid=BV1iY4y1r7GE&cid=716979750&page=1" height="600" wigth="1024" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<iframe src="https://player.bilibili.com/player.html?aid=638985869&bvid=BV1iY4y1r7GE&cid=716979750&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
 #### 4.1.2. linux测试
 
-<iframe src="https://player.bilibili.com/player.html?aid=683901725&bvid=BV1sU4y1S7LS&cid=716979645&page=1" height="600" wigth="1024" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<iframe src="https://player.bilibili.com/player.html?aid=683901725&bvid=BV1sU4y1S7LS&cid=716979645&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
 #### 4.1.3. 真机测试
 
-<iframe src="https://player.bilibili.com/player.html?aid=553968251&bvid=BV1Bv4y1P7cE&cid=716979648&page=1" height="600" wigth="1024" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<iframe src="https://player.bilibili.com/player.html?aid=553968251&bvid=BV1Bv4y1P7cE&cid=716979648&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
 #### 4.1.4. 插件下载地址
 
