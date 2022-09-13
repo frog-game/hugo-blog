@@ -11,8 +11,6 @@ tags:
 -
 description: ""
 weight:
-slug: "wangluo_io_zongjie"
-url: "post/blog/wangluo_io_zongjie"
 draft: false # 是否为草稿
 comments: true
 reward: true # 打赏
