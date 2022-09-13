@@ -84,28 +84,28 @@ zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz | mysql -uzabbix -p -
 
 **如果报`ERROR 2003 (HY000): Can't connect to MySQL server on '10.40.38.67:3306' (111)` 看第5章`mysql`操作指导，多半是因为权限和密码问题**
 
-###  为Zabbix server配置数据库
+###   1.6. 为Zabbix server配置数据库
 
 ```shell
 sudo vim  /etc/zabbix/zabbix_server.conf
 修改 DBPassword=123456
 ```
 
-### 1.6. 启动Zabbix server和agent进程
+### 1.7. 启动Zabbix server和agent进程
 
 ```shell
 sudo systemctl restart zabbix-server zabbix-agent apache2 grafana-server
 sudo systemctl enable zabbix-server zabbix-agent apache2 grafana-server
 ```
 
-### 1.7. 连接web前端[10.40.38.67 换成你的ip地址] [用谷歌浏览器或者microsoft Edge浏览器打开]
+### 1.8. 连接web前端[10.40.38.67 换成你的ip地址] [用谷歌浏览器或者microsoft Edge浏览器打开]
 
 ```shell
  http://10.40.38.67/zabbix
  默认的用户名是Admin(A是大写)，Password：zabbix
 ```
 
-### 1.8. 修改时区
+### 1.9. 修改时区
 
 ```sh
 sudo vi /etc/apache2/conf-enabled/zabbix.conf
@@ -114,7 +114,7 @@ sudo vi /etc/apache2/conf-enabled/zabbix.conf
 
 ![](Typoraimage-20220211220534064.png)
 
-### 1.9. 中文显示
+### 1.10. 中文显示
 
 ```sh
 sudo apt install language-pack-zh-hans  #安装中文语言包
@@ -125,9 +125,9 @@ sudo vim /etc/default/locale #修改默认语言为中文，将原来的内容�
 
 ![](Typoraimage-20220211221904380.png)
 
-### 1.10. 安装出现的问题
+### 1.11. 安装出现的问题
 
-#### 1.10.1. Minimum required size of PHP post is 16M (configuration option "post_max_size").
+#### 1.11.1. Minimum required size of PHP post is 16M (configuration option "post_max_size").
 
 ![](image-20220601181428220.png)
 
@@ -149,7 +149,7 @@ sudo vi /etc/php/8.1/apache2/php.ini
 sudo systemctl restart zabbix-server zabbix-agent apache2 grafana-server
 ```
 
-#### 1.10.2. ERROR 1396 (HY000): Operation CREATE USER failed for `'zabbix'@'%'`
+#### 1.11.2. ERROR 1396 (HY000): Operation CREATE USER failed for `'zabbix'@'%'`
 
 ```sh
 mysql> create user zabbix@`%` identified by '123456';
@@ -172,7 +172,7 @@ drop user zabbix@'%';
 flush privileges;
 ```
 
-### 1.11. 卸载 `zabbix`
+### 1.12. 卸载 `zabbix`
 
  1. 删除软件
 
@@ -239,9 +239,9 @@ flush privileges;
     ```
 
 
-##  grafana
+##  2 . grafana
 
-### 1.12. 下载grafana deb安装包
+### 2.1. 下载grafana deb安装包
 
 ```sh
 sudo apt-get install -y adduser libfontconfig1
@@ -249,14 +249,14 @@ sudo wget https://dl.grafana.com/enterprise/release/grafana-enterprise_8.5.4_amd
 sudo dpkg -i grafana-enterprise_8.5.4_amd64.deb
 ```
 
-### 1.13. 启动grafana-server
+### 2.2. 启动grafana-server
 
 ```sh
 sudo systemctl restart grafana-server
 sudo systemctl enable grafana-server
 ```
 
-###  安装zabbix插件
+###  2.3安装zabbix插件
 
 ```sh
 grafana-cli plugins list-remote
@@ -272,18 +272,18 @@ sudo systemctl restart grafana-server
 
 ![](image-20220601201145104.png)
 
-### 1.14. 登录grafana服务器[10.40.38.67 换成你的ip地址] [用谷歌浏览器或者microsoft Edge浏览器打开]
+### 2.4. 登录grafana服务器[10.40.38.67 换成你的ip地址] [用谷歌浏览器或者microsoft Edge浏览器打开]
 
 ```sh
 http:/10.40.38.67:3000/
 #默认用户名和密码为admin、admin
 ```
 
-### 1.15. grafana 配置zabbix数据源
+### 2.5. grafana 配置zabbix数据源
 
 ![](Typora1.png)
 
-### 1.16. grafana 配置zabbix监控面板
+### 2.6. grafana 配置zabbix监控面板
 
 ![](Typoraimage-20220211222333409.png)
 
@@ -291,7 +291,7 @@ http:/10.40.38.67:3000/
 
 ![](Typoraimage-20220211222517727.png)
 
-### 1.17. `grafana`增加主题
+### 2.7. `grafana`增加主题
 
 ```php
 安装插件：grafana-cli plugins install yesoreyeram-boomtheme-panel
@@ -329,7 +329,7 @@ http://10.40.38.67:3000/public/themes/aquamarine.css
 
     ![](image-20220601212433764.png)
 
-### 1.18. grafana 主题修改地址
+### 2.8. grafana 主题修改地址
 
 ```sh
 cd /usr/share/grafana/public/themes
@@ -337,21 +337,21 @@ cd /usr/share/grafana/public/themes
 
 ![](Typoraimage-20220217192410413.png)
 
-### 1.19. grafana 加时钟
+### 2.9. grafana 加时钟
 
 ```sh
 grafana-cli plugins install grafana-clock-panel
 systemctl restart grafana-server
 ```
 
-### 1.20. grafana flowcharting安装
+### 2.10. grafana flowcharting安装
 
 ```sh
 sudo grafana-cli plugins install agenty-flowcharting-panel
 sudo systemctl restart grafana-server
 ```
 
-###  grafana 修改模板地址
+###  2.11 grafana 修改模板地址
 
 ```php
 https://grafana.com/grafana/dashboards
@@ -365,7 +365,7 @@ zabbix 展示地址：http://192.168.70.130/zabbix/zabbix.php?action=dashboard.v
 grafana 展示地址: http://192.168.70.130:3000/d/tYxzFya7z/test_zabbix?orgId=1
 ```
 
-### 1.21. `Grafana` 匿名访问（免登录）
+### 2.12. `Grafana` 匿名访问（免登录）
 
 1. 修改`Grafana`配置文件
 
@@ -401,7 +401,7 @@ grafana 展示地址: http://192.168.70.130:3000/d/tYxzFya7z/test_zabbix?orgId=1
     sudo systemctl restart grafana-server
     ```
 
-### 1.22. 卸载 `grafana`
+### 2.13. 卸载 `grafana`
 
  1. 查找到安装软件名
 
@@ -435,9 +435,9 @@ grafana 展示地址: http://192.168.70.130:3000/d/tYxzFya7z/test_zabbix?orgId=1
     rm -rf /var/lib/grafana
     ```
 
-## 2. apache2
+## 3. apache2
 
-### 2.1. apache2启动报错
+### 3.1. apache2启动报错
 
 ![Typoraimage-20220213113645141](Typoraimage-20220213113645141.png)
 
@@ -465,7 +465,7 @@ root@hls:/root#  kill -9 950
 root@hls:/root# systemctl restart zabbix-server zabbix-agent apache2
 ```
 
-### 2.2. 卸载apache2
+### 3.2. 卸载apache2
 
 1. 删除软件
 
@@ -495,15 +495,15 @@ root@hls:/root# systemctl restart zabbix-server zabbix-agent apache2
 
    ![Typoraimage-20220216162825900](Typoraimage-20220216162825900.png)
 
-## 3. Nginx
+## 4. Nginx
 
-### 3.1. 官网下载地址
+### 4.1. 官网下载地址
 
 ```sh
 http://nginx.org/en/download.html
 ```
 
-### 3.2. 一些环境准备
+### 4.2. 一些环境准备
 
 1. 安装编译工具
 
@@ -525,7 +525,7 @@ http://nginx.org/en/download.html
    sudo apt install zlib1g-dev
    ```
 
-### 3.3. 下载安装Nginx
+### 4.3. 下载安装Nginx
 
 ```sh
 sudo wget http://nginx.org/download/nginx-1.21.6.tar.gz
@@ -536,13 +536,13 @@ sudo make
 sudo make install
 ```
 
-### 3.4. 制作软连接
+### 4.4. 制作软连接
 
 ```sh
 ln -s /usr/local/nginx/sbin/nginx /usr/local/sbin/
 ```
 
-### 3.5. 配置环境变量 编辑`/etc/profile`并且追加Nginx的环境变量
+### 4.5. 配置环境变量 编辑`/etc/profile`并且追加Nginx的环境变量
 
 ```sh
 export NGINX_HOME=/usr/local/nginx
@@ -551,13 +551,13 @@ export PATH=$PATH:$NGINX_HOME/sbin
 
 ![Typoraimage-20220218152713494](Typoraimage-20220218152713494.png)
 
-#### 3.5.1. 生效环境变量
+#### 4.5.1. 生效环境变量
 
 ```sh
 source /etc/profile
 ```
 
-### 3.6. 测试是否安装成功
+### 4.6. 测试是否安装成功
 
 ```sh
 nginx -v
@@ -565,31 +565,31 @@ nginx -v
 
 ![Typoraimage-20220218152739564](Typoraimage-20220218152739564.png)
 
-### 3.7. 启动Nginx
+### 4.7. 启动Nginx
 
 ```sh
 sudo nginx
 ```
 
-### 3.8. 强制停止Nginx
+### 4.8. 强制停止Nginx
 
 ```sh
 sudo pkill -9 nginx
 ```
 
-### 3.9. 查看Nginx进程
+### 4.9. 查看Nginx进程
 
 ```sh
 ps aux|grep nginx
 ```
 
-### 3.10. 配置防火墙
+### 4.10. 配置防火墙
 
 ```sh
 sudo ufw allow 'Nginx Full'
 ```
 
-### 3.11. 验证防火墙是否允许 出现下面两种情况都认为可以
+### 4.11. 验证防火墙是否允许 出现下面两种情况都认为可以
 
 ```sh
 Status: active
@@ -607,7 +607,7 @@ sudo ufw status
 状态：不活动
 ```
 
-### 3.12. 测试访问
+### 4.12. 测试访问
 
 ```php
 http://192.168.70.132:7000
@@ -615,7 +615,7 @@ http://192.168.70.132:7000
 
 ![Typoraimage-20220218131129493](Typoraimage-20220218131129493.png)
 
-### 3.13. Nginx 相关文件位置
+### 4.13. Nginx 相关文件位置
 
 ```sh
 nginx path prefix: "/usr/local/nginx"
@@ -634,7 +634,7 @@ nginx http scgi temporary files: "scgi_temp"
 
 ```
 
-###  卸载 Nginx
+###  4.14 卸载 Nginx
 
 ```sh
 sudo rm -rf /usr/local/nginx
@@ -642,9 +642,9 @@ sudo rm -rf /usr/local/nginx/sbin/nginx #软连接也记得删除
 如果想完全干净，/etc/profile 配置文件中指定的环境变量也可以删除
 ```
 
-## 4. mysql
+## 5. mysql
 
-### 4.1. 安装mysql
+### 5.1. 安装mysql
 
 ```shell
 sudo apt update
@@ -657,7 +657,7 @@ sudo apt install mysql-server
 sudo systemctl status mysql
 ```
 
-###  彻底卸载mysql方法
+###  5.2. 彻底卸载mysql方法
 
 1. 查看依赖包
 
@@ -699,7 +699,7 @@ sudo systemctl status mysql
    https://blog.csdn.net/PY0312/article/details/89481421
    ```
 
-###  MySQL在Ubuntu上启动出错Could not open ‘abstractions/mysql‘
+###  5.3. MySQL在Ubuntu上启动出错Could not open ‘abstractions/mysql‘
 
 ```
 rm -rf /etc/apparmor.d/abstractions/mysql 
@@ -707,7 +707,7 @@ rm -rf /etc/apparmor.d/cache/usr.sbin.mysqld
 find / -name 'mysql*' -exec rm -rf {} \;
 ```
 
-### 4.2. 连接MySql报错“can't connect to local mysql server through socket '/var/run/mysqld/mysqld.sock'
+### 5.2. 连接MySql报错“can't connect to local mysql server through socket '/var/run/mysqld/mysqld.sock'
 
 ```sh
 cd /etc/init.d
@@ -715,7 +715,7 @@ sudo service mysql stop
 sudo service mysql start 
 ```
 
-###  mysql Ubuntu 20.04   Access denied for user 'root'@'localhost
+###  5.5. mysql Ubuntu 20.04   Access denied for user 'root'@'localhost
 
 1. 首先输入以下指令 获取密码：
 
@@ -802,17 +802,17 @@ sudo service mysql start
 
       ![Typoraimage-20220214174241984](Typoraimage-20220214174241984.png)
 
-## 5. ELK 
+## 6. ELK 
 
-### 5.1. 一些准备
+### 6.1. 一些准备
 
-#### 5.1.1. 官网地址
+#### 6.1.1. 官网地址
 
 ```php
  https://www.elastic.co/guide/en/elasticsearch/reference/8.0/deb.html#deb-repo
 ```
 
-#### 5.1.2. 虚拟机
+#### 6.1.2. 虚拟机
 
 1. 想要多开最好是克隆一份出来 比如2就是克隆的1的镜像
 
@@ -854,7 +854,7 @@ sudo service mysql start
    3、注意每一层前边的缩进，至少比上一层多两个空格
    ```
 
-#### 5.1.3. 安装java环境
+#### 6.1.3. 安装java环境
 
 1.  安装java
 
@@ -931,7 +931,7 @@ sudo service mysql start
 
       ![Typoraimage-20220216164211060](Typoraimage-20220216164211060.png)
 
-#### 5.1.4. python3
+#### 6.1.4. python3
 
   **<font color='red'>[不是必须装主要是想使用 json.tool 格式化输出]</font>**
 
@@ -959,11 +959,11 @@ sudo service mysql start
    curl -XGET http://192.168.70.131:9200/_mapping | python -m json.tool
    ```
 
-### 5.2. Elasticsearch
+### 6.2. Elasticsearch
 
-#### 5.2.1. 基础知识
+#### 6.2.1. 基础知识
 
-#####  和关系型数据库的比较
+#####   6.2.1.1. 和关系型数据库的比较
 
 |   DBMS   |           Elasticsearch            |
 | :------: | :--------------------------------: |
@@ -974,7 +974,7 @@ sudo service mysql start
 |  Schema  |              Mapping               |
 |   SQL    | DSL(Descriptor Structure Language) |
 
-####  安装Elasticsearch
+####  6.2.2 安装Elasticsearch
 
 1. deb包安装方式
 
@@ -1044,7 +1044,7 @@ sudo service mysql start
   sudo mkdir -p ~/.config/certs && sudo mv /usr/share/elasticsearch/elastic-stack-ca.p12 /usr/share/elasticsearch/elastic-certificates.p12 ~/.config/certs
   ```
 
-#### 5.2.2. 启动 Elasticsearch
+#### 6.2.3. 启动 Elasticsearch
 
 ​	**<font color='red'>[为了安全考虑Elasticsearch不允许使用root用户来启动]</font>**
 
@@ -1082,11 +1082,11 @@ sudo service mysql start
    sudo systemctl enable elasticsearch.service
    ```
 
-#### 5.2.3. 连接grafana
+#### 6.2.4. 连接grafana
 
 ![](Typoraimage-20220217213204621.png)
 
-#### 5.2.4. Elasticsearch 操作命令 
+#### 5.2.5. Elasticsearch 操作命令 
 
 1. 用jps命令关闭Elasticsearch
 
@@ -1140,7 +1140,7 @@ sudo service mysql start
    sudo vim /var/log/elasticsearch/elasticsearch.log
    ```
 
-#### 5.2.5. Elasticsearch 卸载
+#### 6.2.6. Elasticsearch 卸载
 
 ```sh
  # 查看安装的软件
@@ -1162,9 +1162,9 @@ sudo service mysql start
 sudo find / -name elasticsearch
 ```
 
-### 5.3. Logstash
+### 6.3. Logstash
 
-#### 5.3.1. 安装 Logstash
+#### 6.3.1. 安装 Logstash
 
 1. 下载安装公共签名
 
@@ -1190,25 +1190,25 @@ sudo find / -name elasticsearch
    sudo apt-get update && sudo apt-get install logstash
    ```
 
-#### 5.3.2. 插件地址
+#### 6.3.2. 插件地址
 
 ```php
 https://www.elastic.co/guide/en/logstash-versioned-plugins/current/index.html
 ```
 
-#### 5.3.3. 配置表字段解释
+#### 6.3.3. 配置表字段解释
 
 ```php
 https://blog.csdn.net/weixin_42073629/article/details/110154037?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_v31_ecpm-1-110154037.pc_agg_new_rank&utm_term=logstash%E5%8F%82%E6%95%B0convert&spm=1000.2123.3001.4430
 ```
 
-#### 5.3.4. 查看安装的插件
+#### 6.3.4. 查看安装的插件
 
 ```sh
 sudo /usr/share/logstash/bin/logstash-plugin list
 ```
 
-####  启动Lostash	
+####   6.3.5. 启动Lostash	
 
    1. 修改 logstash.yml 配置
 
@@ -1218,7 +1218,7 @@ sudo /usr/share/logstash/bin/logstash-plugin list
       
       ![](Typoraimage-20220218001656526.png)
 
-#### 5.3.5. 导入数据[利用logstash 直接分析movies.csv 传送给elasticsearch方式]
+#### 6.3.6. 导入数据[利用logstash 直接分析movies.csv 传送给elasticsearch方式]
 
 ​		  收集流程: **<font color='red'>movies.csv->logstash->elasticdearch->grafana</font>**
 
@@ -1337,13 +1337,13 @@ sudo /usr/share/logstash/bin/logstash-plugin list
        ![](Typoraimage-20220217124136069.png)
     
 
-#### 5.3.6. 强制查看输出  **<font color='red'>logstash.conf</font>** 修改成你自己的文件
+#### 6.3.7. 强制查看输出  **<font color='red'>logstash.conf</font>** 修改成你自己的文件
 
 ```sh
 sudo /usr/share/logstash/bin/logstash  /etc/logstash/logstash.conf --verbose --debug
 ```
 
-#### 5.3.7. 查看数据
+#### 6.3.8. 查看数据
 
  1. 用Kibana的命令行工具执行 **<font color='red'>GET _cat/indices</font>** 命令，就能看见导入到Elasticsearch的索引
 
@@ -1353,7 +1353,7 @@ sudo /usr/share/logstash/bin/logstash  /etc/logstash/logstash.conf --verbose --d
     
        ![](image-20220603204457448.png)
 
-#### 5.3.8. 自动重新加载配置命令
+#### 6.3.9. 自动重新加载配置命令
 
 **<font color='red'>logstash.conf</font>** 修改成你自己的文件
 
@@ -1390,9 +1390,9 @@ sudo /usr/share/logstash/bin/logstash  /etc/logstash/logstash.conf --config.relo
 sudo find / -name logstash
 ```
 
-### 5.4. Kibana
+### 6.4. Kibana
 
-#### 5.4.1. 安装Kibana
+#### 6.4.1. 安装Kibana
 
  1. 下载安装公共签名
 
@@ -1418,7 +1418,7 @@ sudo find / -name logstash
    sudo apt-get update && sudo apt-get install kibana
    ```
 
-#### 5.4.2. 启动Kibana
+#### 6.4.2. 启动Kibana
 
  1. 打开kibana.yml 文档
 
@@ -1457,7 +1457,7 @@ sudo find / -name logstash
     ```
 
 
-#### 5.4.3. 卸载Kibana
+#### 56.4.3. 卸载Kibana
 
 ```sh
  # 查看安装的软件
@@ -1476,20 +1476,20 @@ sudo find / -name logstash
 sudo find / -name kibana
 ```
 
-### 5.5. Filebeat
+### 6.5. Filebeat
 
 **搭配filebeat主要使用收集nginx数据, `和上面的利用logstash解析movies.csv，然后收集数据给elasticsearch`的方式不一样** 
 
 收集流程: **<font color='red'>nginx->filebeat->logstash->elasticdearch->grafana</font>**
 
-#### 5.5.1. 安装Filebeat
+#### 6.5.1. 安装Filebeat
 
 ```sh
 sudo curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.2.2-amd64.deb
 sudo dpkg -i filebeat-8.2.2-amd64.deb
 ```
 
-#### 5.5.2. 修改 filebat.yml 配置文件
+#### 6.5.2. 修改 filebat.yml 配置文件
 
 ```sh
 sudo vim /etc/filebeat/filebeat.yml
