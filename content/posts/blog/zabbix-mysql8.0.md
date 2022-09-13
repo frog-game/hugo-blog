@@ -1,5 +1,5 @@
 ---
-title: "Ubuntu20.04+mysql8.0+zabbix6.0+elk+filebeat+logstash+grafana 游戏监控日志系统部署"
+title: "zabbix游戏监控日志系统部署"
 date: 2022-09-13T01:30:29+08:00
 lastmod: 2022-09-13T01:30:29+08:00
 author: ["frog"]
@@ -30,7 +30,11 @@ relative: false
 
 ![](Typora_11_jiankongsystem1.svg)
 
+利用bspTree原理对地图进行动态切割
 
+ **<font color='red'>演示</font>**
+
+<iframe src="//player.bilibili.com/player.html?aid=603017673&bvid=BV1VB4y1n7c9&cid=832077865&page=1" height="600" wigth="1024" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 | 安装环境 | 版本  |
 | -------- | ----- |
@@ -38,9 +42,7 @@ relative: false
 | zabbix   | 6.0   |
 | mysql    | 8.0   |
 
-​						`Ubuntu20.04+mysql8.0+zabbix6.0+elk+filebeat+logstash+grafana`
-
-​																`游戏监控日志系统部署`
+ **<font color='red'>Ubuntu20.04+mysql8.0+zabbix6.0+elk+filebeat+logstash+grafana</font>**							
 
 ## 1. zabbix 6.0
 
@@ -1679,10 +1681,6 @@ sudo find / -name filebeat
 ```
 
 
-
-## 7. 演示
-
-<iframe src="//player.bilibili.com/player.html?aid=603017673&bvid=BV1VB4y1n7c9&cid=832077865&page=1" height="600" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 
 
