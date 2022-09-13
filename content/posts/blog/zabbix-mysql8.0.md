@@ -30,8 +30,6 @@ relative: false
 
 ![](Typora_11_jiankongsystem1.svg)
 
-利用bspTree原理对地图进行动态切割
-
  **<font color='red'>演示</font>**
 
 
