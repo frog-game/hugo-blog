@@ -34,7 +34,9 @@ relative: false
 
  **<font color='red'>演示</font>**
 
-<iframe src="//player.bilibili.com/player.html?aid=603017673&bvid=BV1VB4y1n7c9&cid=832077865&page=1" height="600" wigth="1024" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+
+<iframe src="//player.bilibili.com/player.html?aid=603017673&bvid=BV1VB4y1n7c9&cid=832077865&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
 | 安装环境 | 版本  |
 | -------- | ----- |
