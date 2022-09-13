@@ -64,10 +64,6 @@ languages:
             name: 📚 文章
             url: posts
             weight: 3
-          - identifier: tags
-            name: 🧩 标签
-            url: tags
-            weight: 15
           - identifier: archives
             name: ⏱ 时间轴
             url: archives/
