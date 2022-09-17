@@ -51,9 +51,19 @@
 .post-content h2 {
     margin: 32px auto 24px;
     font-size: 32px;
+    border-bottom: 2px solid rgb(239, 112, 96);
 }
 
-.post-content h3 {
+.post-content h2 span {
+ display: inline-block;
+ font-weight: bold;
+ background: rgb(239, 112, 96);
+ color: #ffffff;
+ padding: 3px 10px 1px 0px;
+ border-top-right-radius: 3px;
+}
+
+.post-content h3 span {
     font-size: 24px;
 }
 
