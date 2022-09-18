@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: ""
+description: "每当我们接收一份新的版本，代码拿到手要做的第一件事就是查看 git log，看看这份代码的提交记录"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    gitlab服务器钩子: "" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/gitlab-pre-receive-hook/ed360bedf6d29a10ca135dbf436057d0.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false

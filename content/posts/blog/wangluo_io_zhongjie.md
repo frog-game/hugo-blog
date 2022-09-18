@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: ""
+description: "网络编程流程 堵塞IO 非堵塞IO 信号驱动IO 异步io模型 多路复用 单reactor 单reactor 多进程模型 单reactor模型 + 任务队列 + 线程池"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    网络IO模型总结: "" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/wangluo_io_zhongjie/image-20220912104016515.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false
@@ -31,7 +31,7 @@ cover:
 
 ![](image-20220912104923737.png)
 
-## 塞IO
+## 堵塞IO
 
 ![](image-20220912141757964.png)
 

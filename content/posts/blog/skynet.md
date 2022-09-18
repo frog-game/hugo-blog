@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: ""
+description: "每个在线客户端在Skynet服务器上都对应有一个Socket与其连接，一个Socket在Skynet内部对应一个Lua虚拟机和一个客户特定的消息队列per client mq。当客户特定消息队列中有消息时，该队列会挂载到全局队列global message queue上供工作线程worker Threads进行调度处理。"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    skynet赏析: "" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/skynet/Typoraimage-20220228100347880.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false

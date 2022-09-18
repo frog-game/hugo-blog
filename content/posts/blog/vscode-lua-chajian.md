@@ -9,7 +9,8 @@ categories:
 -
 tags:
 -
-description: ""
+description: "先从luahook原理说起
+在lua.h 当中我们有 lua_sethook函数来给们设置钩子"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +22,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    微服务lua调试器: "" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/vscode-lua-chajian/image-20220913233913512.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false
@@ -43,11 +44,11 @@ LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
 >
 >   ```
 >   LUA_MASKCALL : 调用函数时回调
->          
+>                  
 >   LUA_MASKRET :函数返回时回调
->          
+>                  
 >   LUA_MASKLINE :执行一行代码时候回调
->          
+>                  
 >   LUA_MASKCOUNT :每执行count条指令时候回调
 >   ```
 > - count：只有掩码包含LUA_MASKCOUNT 这个状态时候才有效果，代表执行count次才会回调一次钩子函数

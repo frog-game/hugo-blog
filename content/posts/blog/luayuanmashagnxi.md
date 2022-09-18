@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: ""
+description: "除了主线程以外，其它线程和其它Lua对象一样都是垃圾回收的对象。当新建一个线程时，线程会压入栈，这样能确保新线程不会成为垃圾"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    gitlab服务器钩子: "" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/luayuanmashagnxi/Typoraimage-20220405220227940.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false

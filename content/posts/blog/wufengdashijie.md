@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: ""
+description: "无缝大地图只是外在表现，其实都是有缝隙的"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    无缝大世界: "" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/wufengdashijie/image-20220910124037020.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false
