@@ -1,7 +1,7 @@
 ---
 title: "skynet赏析"
-date: 2022-09-13T01:30:29+08:00
-lastmod: 2022-09-13T01:30:29+08:00
+date: 2022-09-15T01:30:29+08:00
+lastmod: 2022-09-15T01:30:29+08:00
 author: ["frog"]
 keywords:
 -
@@ -26,17 +26,18 @@ cover:
     alt: ""
     relative: false
 ---
-## 1. linux编译
+
+## linux编译
 
 ```sh
 make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC
 ```
 
-## 2. 网络流程图
+## 网络流程图
 
 ![Typoraimage-20220228100347880](Typoraimage-20220228100347880.png)
 
-### 2.1 work线程和次级队列
+### work线程和次级队列
 
 > 每个在线客户端在Skynet服务器上都对应有一个Socket与其连接，一个Socket在Skynet内部对应一个Lua虚拟机和一个客户特定的消息队列per client mq。当客户特定消息队列中有消息时，该队列会挂载到全局队列global message queue上供工作线程worker Threads进行调度处理。
 >
@@ -48,7 +49,7 @@ make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC
 >
 > 使用Lua实现的服务只是一个内嵌了Lua虚拟机的服务，也遵守上面的规则。如果服务B是一个Lua服务，当服务A向服务B发送两条消息x和y时，Skynet一定保证x先被服务B中的Lua虚拟机接收到，并为消息x生成要给协程X，并运行这个协程。然后才会接收到消息y，并重新生成一个新的协程Y并运行。
 
-### 2.2 同步问题
+### 同步问题
 
 同步也是skynet存在的问题，当一个服务call其他服务时，当前协程会挂起，但是这个服务还可以接受并处理其他消息。如果多个协程改到同一个数据，你不做同步处理就无法确定这个数据会是多少。
 
@@ -56,15 +57,15 @@ make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC
 
 当然，同步问题也容易解决，加多一个state的标识和一个协程列表，操作执行时，将state置doing，其他协程判断state=doing时就将自己加到协程列表，然后 skynet.wait。在操作执行完后，重置state，然后遍历协程列表依次 skynet.wakeup(co) ，最后将协程列表置空。
 
-### 2.3 解释此队列![Typoraimage-20220228101336039](Typoraimage-20220228101336039.png)
+### 解释此队列![Typoraimage-20220228101336039](Typoraimage-20220228101336039.png)
 
 > 红黑树上的节点是所有监听的socket
 > 黄色底的是interesting 队列 蓝色底是黄色底的子队列 也就是就绪队列
-> epoll_ctrl() 执行增加操作时候就是往interesting队列塞socket
+> epoll_ctrl() 执行增加操作时候就是往interesting队列塞socket 
 > 当有读写事件时候，就会往蓝色底队列放入socket也就是塞入就绪队列
 > 通过epoll_wait()把就绪队列的东西返回出来
 
-### 2.4 线程类型
+### 线程类型
 
 > `socket thread `: 线程进程消息收发
 >
@@ -74,25 +75,28 @@ make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC
 >
 > `work thread` 线程 对消息队列进行调度
 
-### 2.5 消息流转
+### 消息流转
 
-> 1. 先从全局队列 `pop`一个次级队列，然后从次级队列 `pop`一个消息调用回调函数进行逻辑处理
+> 1. 先从全局队列`pop`一个次级队列，然后从次级队列`pop`一个消息调用回调函数进行逻辑处理
 > 2. 用完以后如果次级队列不为空或者堵塞，继续把次级队列放入全局队列
 
-## 3. 启动流程
+## 启动流程
 
 1. 加载配置文件
-2. 配置文件存入lua的全局变量env
-3. 创建和启动c服务 `logger`
-4. 启动引导模块并启动第一个lua服务(`bootstrap`)
-5. 然后在通过 `bootstrap`配置去启动其他的微服务
 
-## 4. cluster 两条tcp通道总结
+2. 配置文件存入lua的全局变量env
+3. 创建和启动c服务`logger`
+4. 启动引导模块并启动第一个lua服务(`bootstrap`)
+5. 然后在通过`bootstrap`配置去启动其他的微服务
+
+## cluster 两条tcp通道总结
 
 ![Typoraimage-20220228113906508](Typoraimage-20220228113906508.png)
 
-**`<font color='red'>`前提 `</font>`**
-两端是严格分为请求方和回应方。比如 ` A---> B` ，那么只能是A向B提出请求，B 回应它；如果 `B----->>A` 需要由 B 向 A 再建立一条通道。
+
+
+**<font color='red'>前提</font>**
+两端是严格分为请求方和回应方。比如` A---> B` ，那么只能是A向B提出请求，B 回应它；如果 `B----->>A` 需要由 B 向 A 再建立一条通道。
 
 TCP特性使得每个TCP连接可以得到均等的带宽。在多用户环境下，一个用户拥有越多TCP连接，获得的带宽越大
 
@@ -101,39 +105,39 @@ TCP特性使得每个TCP连接可以得到均等的带宽。在多用户环境�
 > **缺点：**如果断了，数据就无法传输，得重新建立新的连接，上层业务逻辑写起来也麻烦，需要清楚那边是发送方，那边是接受方
 
 > 2条连接
-> **优点：**在前面前提的基础上，有两条连接，上层业务逻辑程序员不需要关心我这个时候是client，还是server，只需要通过 `cluster.call`，`cluster.send`，接口直接往里面塞数据就行了，多条连接也便于抢带宽
+> **优点：**在前面前提的基础上，有两条连接，上层业务逻辑程序员不需要关心我这个时候是client，还是server，只需要通过`cluster.call`，`cluster.send`，接口直接往里面塞数据就行了，多条连接也便于抢带宽
 > **缺点:**多了一条连接，对cs结构过来的程序员不太容易理解为什么这么弄有好处，或者是不知道有前面那个前提
 > 为什么不在开辟更多的连接，因为开辟更多的链接意义不大，如果这台机器上弄了不少进程，连接数和机器的配置也是有关系的，多了，如果用不上也是一种浪费，同时对于业务程序员来说也逻辑混乱，
 > 因为假如是4条，那么接受方还得区分是那条发过来的数据
 
-## 5. master / slave 组网过程
+## master / slave 组网过程
 
 ![Typoraimage-20220228105701937](Typoraimage-20220228105701937.png)
 
-1. `slave3`发送 `sync`给 `master`，并启动自己的 `listen`
-2. `master`收到信息给已经连接上的 `slave1`，`slave2`发送 `slave3`请求连接的情况
-3. `master`给 `slave3`发送当前已经连接上的 `slave`数量，并把 `slave3`加入节点组
-4. `slave1`，`slave3`接收到 `master`发送的信息后，调用 `connect`去连接 `slave3`
+1. `slave3`发送`sync`给`master`，并启动自己的`listen`
+2. `master`收到信息给已经连接上的`slave1`，`slave2`发送`slave3`请求连接的情况
+3. `master`给`slave3`发送当前已经连接上的`slave`数量，并把`slave3`加入节点组
+4. `slave1`，`slave3`接收到`master`发送的信息后，调用`connect`去连接`slave3`
 
-## 6. master /slave 断网过程
+## master /slave 断网过程
 
 ![Typoraimage-20220228110016236](Typoraimage-20220228110016236.png)
 
-1. `master`检测到 `slave3`失去连接，把 `slave3`连接 `fd`置成 `0`
-2. `master`把失去连接的 `slave3 id `广播给 `slave1`，`slave2`
-3. `slave1`，`slave2`得到 `slave3 id`之后和 `slave3`断开连接
+1. `master`检测到`slave3`失去连接，把`slave3`连接`fd`置成`0`
+2. `master`把失去连接的`slave3 id `广播给`slave1`，`slave2`
+3. `slave1`，`slave2`得到`slave3 id`之后和`slave3`断开连接
 
-## 7. harbor 服务
+## harbor 服务
 
 ![Typoraimage-20220228110247888](Typoraimage-20220228110247888.png)
 
-每个节点都有一个 `harborid`，在发送消息的时候会把这个 `harborid`放到消息 `id`的
+每个节点都有一个`harborid`，在发送消息的时候会把这个`harborid`放到消息`id`的
 
 高8位，所以通过高8位的对比就知道这个消息是远程消息，还是本地消息，如果是远程消息
 
-通过 `harbor`和远程的 `harbor`建立 `tcp`连接发送数据过去，如果是本地直接放入本地节点处理逻辑
+通过`harbor`和远程的`harbor`建立`tcp`连接发送数据过去，如果是本地直接放入本地节点处理逻辑
 
-## 8. 消息处理方式
+## 消息处理方式
 
 - `skeynet.send` 非堵塞不需要应答
 - `skynet.call` 堵塞需要应答
@@ -141,77 +145,77 @@ TCP特性使得每个TCP连接可以得到均等的带宽。在多用户环境�
 - `skynet.response` 请求和相应在不用协程处理
 - `skynet.queue` 串行化消息执行
 
-## 9. 锁
+## 锁
 
 ### `互斥锁`
 
 适用于得到锁以后处理时间>线程切换时间场景 得到锁的线程会被唤醒处理逻辑，没有抢占到锁的线程会进入休眠状态
 
-`互斥锁加锁失败`以后，会从用户态变成内核态，线程就会释放 `CPU` 给其他线程,`会有两次线程上下文的切换成本`
+`互斥锁加锁失败`以后，会从用户态变成内核态，线程就会释放`CPU` 给其他线程,`会有两次线程上下文的切换成本`
 
-1. 线程加锁失败时，内核会把线程的状态从 `「运行」`状态设置为 `「睡眠」`状态，然后把 CPU 切换给其他线程运行
-2. 接着，当锁被释放时，之前 `「睡眠」`状态的线程会变为「`就绪」`状态，然后内核会在合适的时间，把 CPU 切换给该线程运行。
+1. 线程加锁失败时，内核会把线程的状态从`「运行」`状态设置为`「睡眠」`状态，然后把 CPU 切换给其他线程运行
+2. 接着，当锁被释放时，之前`「睡眠」`状态的线程会变为「`就绪」`状态，然后内核会在合适的时间，把 CPU 切换给该线程运行。
 
 上下文切换的时间，大概在几十纳秒到几微妙之间，所以如果你能确认你被锁住的代码时间很短，那么就不应该用互斥锁，而应该用自旋锁
 
 ![Typoraimage-20220301214016070](Typoraimage-20220301214016070.png)
 
-### 9.2 `自旋锁`
+### `自旋锁`
 
 没有获取到权限的的线程不会进入休眠状态一直自旋检测是否能获取资源，适用于得到锁以后处理时间< 线程切换时间的场景，得到锁处理逻辑最好别有IO操作或者文件流操作
 
-自旋锁是通过 `cpu`的 `CAS`函数，在用户态就完成了加锁和解锁操作，所以不会有上下文的切换，相比互斥锁来说，会快一点
+自旋锁是通过`cpu`的`CAS`函数，在用户态就完成了加锁和解锁操作，所以不会有上下文的切换，相比互斥锁来说，会快一点
 
 一般加锁的过程有两步
 
 1. 查看锁的状态，如果锁是空闲的，那么执行第二步
 2. 将锁设置为当前线程持有
 
-`自旋锁加锁失败`以后线程会 `忙等待`，直到它能 `拿到锁`
+`自旋锁加锁失败`以后线程会`忙等待`，直到它能`拿到锁`
 
-### 9.3 `读写锁`
+### `读写锁`
 
-实现在 `rwlock.h`中
+实现在`rwlock.h`中
 
-`读锁`是 `共享`锁概念，其他锁去读的时候读取的是共享的资源，
+`读锁`是`共享`锁概念，其他锁去读的时候读取的是共享的资源，
 
-`写锁`是 `独占`概念，其他锁只能等待抢占到的锁释放资源，适用于读多写少场景
+`写锁`是`独占`概念，其他锁只能等待抢占到的锁释放资源，适用于读多写少场景
 
-所以更具场景可以分为 `读优先锁`和 `写优先锁`
+所以更具场景可以分为`读优先锁`和`写优先锁`
 
-#### 9.3.1 `读优先锁`
+#### `读优先锁`
 
 ![Typoraimage-20220301220450723](Typoraimage-20220301220450723.png)
 
-`读优先锁`对于读线程并发性更好，但是也不是没有问题，我们试想一下，如果一直有 `读线程`获取锁，那么 `写线程`就会被饿死
+`读优先锁`对于读线程并发性更好，但是也不是没有问题，我们试想一下，如果一直有`读线程`获取锁，那么`写线程`就会被饿死
 
-#### 9.3.2 `写优先锁`
+#### `写优先锁`
 
 ![Typoraimage-20220301220728053](Typoraimage-20220301220728053.png)
 
-`写优先锁`可以保证 `写线程`不被饿死，但是如果一直有 `写线程`获取，那么 `读线程`也会被饿死
+`写优先锁`可以保证`写线程`不被饿死，但是如果一直有`写线程`获取，那么`读线程`也会被饿死
 
-所以不管是优先读锁还是写锁，对方都可能被饿死，所以我们不偏袒任何一方，搞个 `公平读写锁`
+所以不管是优先读锁还是写锁，对方都可能被饿死，所以我们不偏袒任何一方，搞个`公平读写锁`
 
-#### 9.3.3 `公平读写锁`
+#### `公平读写锁`
 
 用队列把获取锁的线程排队，不管是写线程还是读线程都按照先进先出的规则加锁，这样读线程一样能并发，也不会出现饥饿现象
 
-### 9.4 `乐观锁和悲观锁区别`
+### `乐观锁和悲观锁区别`
 
 `悲观锁`做事比较悲观，他认为多线程同时修改共享资源的概率比较高，所以在访问资源之前都会先上一把锁。
 
 `乐观锁`正好相反，他认为多线程同时修改共享资源的概率比较低，所以会让先修改完资源，然后在判断是不是有冲突，有没有其他的线程在修改资源，如果有的话就直接放弃本次操作，
 
-互斥锁、自旋锁、读写锁，都是属于 `悲观锁`
+互斥锁、自旋锁、读写锁，都是属于`悲观锁`
 
-### 9.5 `重入锁`
+### `重入锁`
 
 ![Typoraimage-20220301223631466](Typoraimage-20220301223631466.png)
 
 就是能一条线程上能重复获取的锁，而不导致死锁
 
-## 10. cluster 模式
+## cluster 模式
 
 ![Typoraimage-20220228110904150](Typoraimage-20220228110904150.png)
 
@@ -219,35 +223,35 @@ TCP特性使得每个TCP连接可以得到均等的带宽。在多用户环境�
 
 在每个 `skynet` 节点（单个进程）内，启动一个叫 `clusterd` 的服务。所有需要跨进程的消息投递都先把消息投递到这个服务上，再由它来转发到网络。
 
-1. 首选通过 `clustername.lua`配置表配置好全部的 `cluster`节点
-2. 在所有要发现的节点上执行 `require"skynet.cluster"`
-3. 用 `cluster.open`建立自己的监听好让别的节点和自己建立 `tcp`通道连接
-4. 通过 `cluster.register`注册 `create`的 `service`
-5. 远程节点利用 `cluster.query()`来得到注册过的节点
-6. 通过 `cluster.call` `skynet.call` ` cluster.send` `skynet.send`来调用远程 `function1` `function2`函数
+1. 首选通过`clustername.lua`配置表配置好全部的`cluster`节点
+2.  在所有要发现的节点上执行`require"skynet.cluster"`
+3. 用`cluster.open`建立自己的监听好让别的节点和自己建立`tcp`通道连接
+4. 通过`cluster.register`注册`create`的`service`
+5. 远程节点利用`cluster.query()`来得到注册过的节点
+6. 通过`cluster.call` `skynet.call` ` cluster.send` `skynet.send`来调用远程`function1` `function2`函数
 
-## 11  简易的mmo 架构
+## 简易的mmo 架构
 
 ![Typoraimage-20220228111324603](Typoraimage-20220228111324603.png)
 
-## 12 网关服务
+## 网关服务
 
 ![Typoraimage-20220228111359433](Typoraimage-20220228111359433.png)
 
 1. `main.lua` 建立 `watchdog`
-2. `watchdog` 通过 `skynet.start()` 创建 `gateService`
-3. `gateService`并通过 `rpc`调用 `watchdogService socket.open` 函数
+2. `watchdog` 通过`skynet.start()` 创建`gateService`
+3. `gateService`并通过`rpc`调用 `watchdogService socket.open` 函数
 4. `watchdogService` 通过 `socket.open` 创建 `agenService`
-5. `agenService` 把 `fd forward`给 `gateService`
-6. `client `发送请求给 `gateService`
-7. `gateService` 把请求重定向给 `agentService`
-8. `agentService` 把处理结果返回给 `client`
+5. `agenService` 把`fd forward`给`gateService`
+6. `client `发送请求给`gateService`
+7. `gateService` 把请求重定向给`agentService`
+8. `agentService` 把处理结果返回给`client`
 
-## 13 协程
+## 协程
 
-coroutine 实现 详细代码见 `lcorolib.c`
+coroutine 实现 详细代码见`lcorolib.c`
 
-### 13.1 派发消息
+### 派发消息
 
 ```c
 function skynet.dispatch_message(...)
@@ -282,7 +286,7 @@ function skynet.dispatch_message(...)
 end
 ```
 
-### 13.2 处理当前消息
+### 处理当前消息
 
 ```c
 local function raw_dispatch_message(prototype, msg, sz, session, source)
@@ -348,7 +352,7 @@ local function raw_dispatch_message(prototype, msg, sz, session, source)
 end
 ```
 
-### 13.3 创建协程
+### 创建协程
 
 ```c
 local function co_create(f)
@@ -395,7 +399,7 @@ local function co_create(f)
 end
 ```
 
-### 13.4 协程挂起
+### 协程挂起
 
 ```c
 -- suspend is local function
@@ -434,29 +438,34 @@ function suspend(co, result, command)
     else
         error("Unknown command : " .. command .. "\n" .. traceback(co))
     end
-end		
+end				
 ```
 
-### 13.5 协程销毁
+### 协程销毁
 
-主要是因为这种基础类型 `LUA_TTHREAD`来决定怎么销毁
+主要是因为这种基础类型`LUA_TTHREAD`来决定怎么销毁
 
 `LUA_TTHREAD` 介绍:
 
-1. 除了主线程以外，其它线程和其它 `Lua`对象一样都是垃圾回收的对象。等待GC回收，当新建一个线程时，线程会压入栈，这样能确保新线程不会成为垃圾
-2. 每次调用 `lua_newstate`的时候都会创建一个新的 `luastate`,不同的 `luastate`完全独立，之间不共享任何数据
+1. 除了主线程以外，其它线程和其它`Lua`对象一样都是垃圾回收的对象。等待GC回收，当新建一个线程时，线程会压入栈，这样能确保新线程不会成为垃圾
+
+2. 每次调用`lua_newstate`的时候都会创建一个新的`luastate`,不同的`luastate`完全独立，之间不共享任何数据
+
 3. 创建一个线程就拥有一个独立的执行栈了，但是它与其线程共用虚拟机的全局状态
 
    ![Typoraimage-20220228115133988](Typoraimage-20220228115133988.png)
-4. 协程提供了新的 `api`接口和 `lua_resetthread`, `coroutine.close` 会使协程进入死亡状态,并且关闭所有的 `close`变量
 
-## 14 send.call 流程
+   
+
+4. 协程提供了新的`api`接口和 `lua_resetthread`, `coroutine.close` 会使协程进入死亡状态,并且关闭所有的`close`变量
+
+## send.call 流程
 
 ![Typoraimage-20220228112317687](Typoraimage-20220228112317687.png)
 
-## 15 API 相关
+## API 相关
 
-### 15.1 cluster
+### cluster
 
 ```lua
 cluster.call(node, address, ...) --远程调用node中的addr
@@ -469,7 +478,7 @@ cluster.register(name, addr) --注册一个cluster结点
 cluster.query(node, name) --查找远程结点中注册过的结点是否存在
 ```
 
-### 15.2 harbor
+### harbor
 
 ```lua
 harbor.link(id) --用来监控一个 slave 是否断开。如果 harbor id 对应的 slave 正常，这个 api 将阻塞。当 slave 断开时，会立刻返回。
@@ -479,7 +488,7 @@ harbor.queryname(name) --可以用来查询全局名字或本地名字对应的�
 harbor.globalname(name, handle) --注册一个全局名字。如果 handle 为空，则注册自己。skynet.name 和 skynet.register 是用其实现的。
 ```
 
-### 15.3 构建服务的一些基础接口
+### 构建服务的一些基础接口
 
 ```lua
 skynet.getenv(varName) --conf配置信息已经写入到注册表中，通过该函数获取注册表的变量值
@@ -491,16 +500,16 @@ skynet.exit() --结束当前服务
 skynet.self() --获取当前服务的句柄handler
 skynet.address(handler) --将handle转换成字符串
 skynet.abort() --退出skynet进程
-skynet.kill(address) ----强制杀死其他服务。可以用来强制关闭别的服务。但强烈不推荐这样做。因为对象会在任意一条消息处理完毕后，毫无征兆的退出。所以推荐的做法是，发送一条消息，让对方自己善后以及调用 skynet.exit 。注：skynet.kill(skynet.self()) 不完全等价于 skynet.exit() ，后者更安全。	
+skynet.kill(address) ----强制杀死其他服务。可以用来强制关闭别的服务。但强烈不推荐这样做。因为对象会在任意一条消息处理完毕后，毫无征兆的退出。所以推荐的做法是，发送一条消息，让对方自己善后以及调用 skynet.exit 。注：skynet.kill(skynet.self()) 不完全等价于 skynet.exit() ，后者更安全。			
 ```
 
-### 15.4 普通服务
+### 普通服务
 
 ```lua
-skynet.newservice(luaServerName, ...)
+skynet.newservice(luaServerName, ...)		
 ```
 
-### 15.5 全局唯一服务
+### 全局唯一服务
 
 ```lua
 skynet.uniqueservice(servicename, ...) --当前的skynet节点全局唯一
@@ -510,12 +519,13 @@ skynet.queryservice(servicename, ...) --当前的skynet节点中查找
 skynet.queryservice(true, servicename, ...) --所有的节点中查找
 ```
 
-### 15.6 别名
+### 别名
 
 别名分两种：
 
-1. 本地别名 代表只能在当前 `skynet`节点使用，本地别名用 `.`开头
-2. 全局别名 可以在所有的 `skynet`中使用 全局别名不能以 `.` 开头
+1. 本地别名 代表只能在当前`skynet`节点使用，本地别名用 `.`开头
+
+2. 全局别名 可以在所有的`skynet`中使用 全局别名不能以`.` 开头
 
 ```lua
 skynet.register(aliasname) --给当前服务定一个别名，可以是全局别名，也可以是本地别名
@@ -531,21 +541,21 @@ skynet.localname(aliasname) --查询本地别名为aliasname的服务，返回se
 skynet.kill(handle) --杀死带别名服务
 ```
 
-### 15.7 服务调度
+### 服务调度
 
 ```lua
 skynet.sleep(time) --让当前的任务等待 time * 0.01s 。
 skynet.fork(func, ...) --启动一个新的任务去执行函数 func , 其实就是开了一个协程，函数调用完成将返回线程句柄 虽然你也可以使用原生的coroutine.create来创建协程，但是会打乱skynet的工作流程
 skynet.yield() --让出当前的任务执行流程，使本服务内其它任务有机会执行，随后会继续运行。
 skynet.wait() --让出当前的任务执行流程，直到用 wakeup 唤醒它。
-skynet.wakeup(co) --唤醒用 wait 或 sleep 处于等待状态的任务。  
+skynet.wakeup(co) --唤醒用 wait 或 sleep 处于等待状态的任务。    
 skynet.timeout(time, func) --设定一个定时触发函数 func ，在 time * 0.01s 后触发。
 skynet.starttime() --返回当前进程的启动 UTC 时间（秒）。
 skynet.now() --返回当前进程启动后经过的时间 (0.01 秒) 。
-skynet.time() --通过 starttime 和 now 计算出当前 UTC 时间（秒）。
+skynet.time() --通过 starttime 和 now 计算出当前 UTC 时间（秒）。		
 ```
 
-### 15.8 消息类型
+### 消息类型
 
 ```c
 #define PTYPE_TEXT 0        --文本
@@ -565,14 +575,14 @@ skynet.time() --通过 starttime 和 now 计算出当前 UTC 时间（秒）。
 #define PTYPE_TAG_ALLOCSESSION 0x20000 --分配新的 session
 ```
 
-### 15.9 打包解包
+### 打包解包
 
 ```lua
 skynet.pack(...) --打包
-skynet.unpack(msg, sz) --解包
+skynet.unpack(msg, sz) --解包		
 ```
 
-### 15.10 发送消息
+### 发送消息
 
 ```lua
  -- 发送无需响应的消息
@@ -585,7 +595,7 @@ skynet.call(addr, type, ...)  --用默认函数打包消息，向addr发送type�
 skynet.rawcall(addr, type, msg, sz) --直接向addr发送type类型的msg,sz并等待返回响应，不对回应信息解包。（需要自己打包与解包）
 ```
 
-### 15.11 响应消息
+### 响应消息
 
 ```lua
 -- 同一个协成处理
@@ -597,35 +607,35 @@ local response = skynet.response(pack)--参数pack指定应答打包函数，不
 response(ok, ...) --参数ok的值可以是 "test"、true、false，为"test"时表示检查接收响应的服务是否存在，为true时表示发送应答PTYPE_RESPONSE，为false时表示发送PTYPE_ERROR错误消息。
 ```
 
-### 15.12 消息冲入时序问题
+### 消息冲入时序问题
 
 ```lua
 skynet.queue() --帮助你回避这些服务重入或者伪并发引起的复杂性,但是明显降低了服务的并发处理能力，所以使用执行队列的时候尽量缩小临界区的颗粒度大小
 ```
 
-### 15.13 协议转换
+### 协议转换
 
 ```lua
 skynet.forward_type() --需要提供一张消息转换映射表forward_map, 其他的方法与skynet.start一样
 ```
 
-### 15.14 伪造消息
+### 伪造消息
 
 ```lua
 skynet.redirect(dest,source,typename, session, msg, sz) --使用source服务地址，发送typename类型的消息给dest服务，不需要接收响应，（source，dest只能是服务ID）msg sz一般使用skynet.pack打包生成
 ```
 
-### 15.15 组播
+### 组播
 
 ```lua
 skynet.multicast -- 当组播的数据量较大时候可以节省内部的带宽
 ```
 
-### 15.16 socket
+### socket
 
 ```lua
 --建立一个 TCP 连接。返回一个数字 id 。
-socket.open(address, port)  
+socket.open(address, port)      
 --关闭一个连接，这个 API 有可能阻塞住执行流。因为如果有其它 coroutine
 --正在阻塞读这个 id 对应的连接，会先驱使读操作结束，close 操作才返回。
 socket.close(id)
@@ -684,19 +694,19 @@ socket.warning(id, callback)
 
 ```
 
-### 15.17 socketChannel
+### socketChannel
 
 ```lua
 用来支持双向传输，异步非堵塞处理数据
 ```
 
-### 15.18 dns
+### dns
 
 ```lua
 skynet.dns --调用了系统 api getaddrinfo ，有可能阻塞住整个 socket 线程 所以skynet封装了这个接口来解决dns查询时候造成的线程堵塞问题
 ```
 
-## 16 skynet 的通信调试pack
+## skynet 的通信调试pack
 
 1. 客户端按大小端打包成二进制
 
@@ -708,11 +718,13 @@ skynet.dns --调用了系统 api getaddrinfo ，有可能阻塞住整个 socket 
    如果要打包一个数字则需要转换。由2种办法
    string.pack("I2",number)，会在前面二进制加2位表示长度的东西。
    ```
+
 2. socket发送
 
    ```lua
    socket.send
    ```
+
 3. 服务端接收
 
    ```lua
@@ -720,9 +732,23 @@ skynet.dns --调用了系统 api getaddrinfo ，有可能阻塞住整个 socket 
     注意的是，socket会自动按pack的数据分段接收。也就是会根据pack的前面2位得到size。根据size去接收后面的数据。然后向上传递一份message。
     接收到的message已经是去掉了前面2位的数据。
    ```
+
 4. 客户端接收
 
    ```lua
    户端接收到的数据目前我是用skynet提供的“client.socket”.没有netpack可用。
     接收到的数据需要自行去除前面的2个字节的数据（string.pack产生的）。
    ```
+
+## skynet clientsocket 导致 io.read 无法正确工作的问题
+
+```php
+https://blog.csdn.net/gneveek/article/details/78940693
+```
+
+
+
+
+
+
+

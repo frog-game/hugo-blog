@@ -27,31 +27,31 @@ cover:
     relative: false
 ---
 
-## 1. 网络编程流程
+##  网络编程流程
 
 ![](image-20220912104923737.png)
 
-## 2. 堵塞IO
+## 塞IO
 
 ![](image-20220912141757964.png)
 
-## 3. 非堵塞IO
+##  非堵塞IO
 
 ![](image-20220912141809146.png)
 
-## 4. 信号驱动IO
+## 信号驱动IO
 
 ![](image-20220912142709884.png)
 
-## 5. 异步io模型
+## 异步io模型
 
 ![](image-20220912143406827.png)
 
-## 6. 多路复用
+## 多路复用
 
 ![](image-20220912141923315.png)
 
-## 7. 单reactor
+## 单reactor
 
 ![](image-20220912115933887.png)
 
@@ -59,31 +59,31 @@ cover:
 
 注意：`redis 6.0 以后是多线程`
 
-## 8. 单reactor 多进程模型
+## 单reactor 多进程模型
 
 ![](image-20220912133954912.png)
 
 代表：nginx
 
-## 9. 单reactor模型 + 任务队列 + 线程池
+## 单reactor模型 + 任务队列 + 线程池
 
 ![](image-20220912103644712.png)
 
 代表作:skynet
 
-## 10. 主从 reactor
+## 主从 reactor
 
 ![](image-20220912125034816.png)
 
 代表作：netty
 
-## 11. 多reactor + 多线程
+##  多reactor + 多线程
 
 ![](image-20220912140325111.png)
 
 代表作：memcache
 
-## 12. 多reactor + 多线程 +协程池
+##  多reactor + 多线程 +协程池
 
 ![](image-20220912104016515.png)
 

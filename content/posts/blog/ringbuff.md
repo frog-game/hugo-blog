@@ -1,7 +1,7 @@
 ---
 title: "环形buff"
-date: 2022-09-13T01:30:29+08:00
-lastmod: 2022-09-13T01:30:29+08:00
+date: 2022-09-16T01:30:29+08:00
+lastmod: 2022-09-18T01:30:29+08:00
 author: ["frog"]
 keywords:
 -
@@ -28,13 +28,13 @@ cover:
 ---
 
 
-## 1. 图解释
+## 图解释
 
 ![Typoraimage-20220307221751488](Typoraimage-20220307221751488.png)
 
 
 
-## 2. 结构体
+##  结构体
 
 ```c
 typedef struct byteQueue_s
@@ -48,7 +48,7 @@ typedef struct byteQueue_s
 
 
 
-## 3. 初始 结构体
+## 初始 结构体
 
 假设要申请的空间 `环形buff`结构体大小为`8`
 
@@ -76,7 +76,7 @@ void byteQueue_init(byteQueue_tt* pByteQueue,size_t nCapacity = /* = 8*/)
 
 ![Typoraimage-20220307215459870](Typoraimage-20220307215459870.png)
 
-## 4. 清空结构体
+##  清空结构体
 
 ```c
 void byteQueue_clear(byteQueue_tt* pByteQueue)
@@ -94,7 +94,7 @@ void byteQueue_clear(byteQueue_tt* pByteQueue)
 
 ![image-20220307215525672](Typoraimage-20220307215525672.png)
 
-## 5. 获取剩余全部可写空间
+##  获取剩余全部可写空间
 
 ```c
 static inline size_t byteQueue_getBytesWritable(byteQueue_tt* pByteQueue)
@@ -110,15 +110,15 @@ static inline size_t byteQueue_getBytesWritable(byteQueue_tt* pByteQueue)
 }
 ```
 
-### 5.1. 写指针在读指针前面[求得是蓝色块数据]
+###  写指针在读指针前面[求得是蓝色块数据]
 
 ![Typoraimage-20220401171227142](Typoraimage-20220401171227142-16530986344221.png)
 
-### 5.2. 写指针在读指针后面[求得是蓝色块数据]
+###  写指针在读指针后面[求得是蓝色块数据]
 
 ![Typoraimage-20220401170218636](Typoraimage-20220401170218636.png)
 
-## 6. 获取剩余全部可读空间
+## 获取剩余全部可读空间
 
 ```c
 static inline size_t byteQueue_getBytesReadable(byteQueue_tt* pByteQueue)
@@ -134,17 +134,17 @@ static inline size_t byteQueue_getBytesReadable(byteQueue_tt* pByteQueue)
 }
 ```
 
-### 6.1. 写指针在读指针后面[求的是红色块的数据]
+###  写指针在读指针后面[求的是红色块的数据]
 
 ![TyporaTyporaimage-20220401170253907](TyporaTyporaimage-20220401170253907.png)
 
-### 6.2. 写指针在读指针前面[求的是红色块的数据]
+### 写指针在读指针前面[求的是红色块的数据]
 
 ![Typoraimage-20220401171227142](Typoraimage-20220401171227142-16530986713592.png)
 
 
 
-## 7. 查看连续的可写空间
+## 查看连续的可写空间
 
 ```c
 //查看连续的可写空间
@@ -164,17 +164,17 @@ static inline char* byteQueue_peekContiguousBytesWrite(byteQueue_tt* pByteQueue,
 }
 ```
 
-### 7.1. 写指针在读指针前面[求得连续可写的空间]
+###  写指针在读指针前面[求得连续可写的空间]
 
 ![Typoraimage-20220401193238810](Typoraimage-20220401193238810.png)
 
-### 7.2. 写指针在读指针后面[求得连续可写的空间]
+###  写指针在读指针后面[求得连续可写的空间]
 
 ![Typoraimage-20220401200102901](Typoraimage-20220401200102901.png)
 
 
 
-## 8. 查看连续可读空间
+##  查看连续可读空间
 
 ```c
 //查看连续的可读空间
@@ -193,15 +193,15 @@ static inline char* byteQueue_peekContiguousBytesRead(byteQueue_tt* pByteQueue, 
 }
 ```
 
-### 8.1. 写指针在读指针后面[求得连续可读的空间]
+###  写指针在读指针后面[求得连续可读的空间]
 
 ![Typoraimage-20220404154851362](Typoraimage-20220404154851362.png)
 
-### 8.2. 写指针在读指针前面[求得连续可读的空间]
+### 写指针在读指针前面[求得连续可读的空间]
 
 ![Typoraimage-20220404154931783](Typoraimage-20220404154931783.png)
 
-## 9. 写入一个字符[空间不足按256的倍数自动扩展]
+## 写入一个字符[空间不足按256的倍数自动扩展]
 
 ```c
 void byteQueue_writeChar(byteQueue_tt* pByteQueue, const char c)
@@ -256,7 +256,7 @@ void byteQueue_writeChar(byteQueue_tt* pByteQueue, const char c)
 }
 ```
 
-## 10. 写入指定大小空间的数据[空间不足按256的倍数自动扩展]
+## 写入指定大小空间的数据[空间不足按256的倍数自动扩展]
 
 ```c
 void byteQueue_write(byteQueue_tt* pByteQueue, const void* pInBytes, size_t nLength)
@@ -321,7 +321,7 @@ void byteQueue_write(byteQueue_tt* pByteQueue, const void* pInBytes, size_t nLen
 }
 ```
 
-## 10. 写入指定大小空间的数据[空间不足按剩余需要空间大小申请]
+## 写入指定大小空间的数据[空间不足按剩余需要空间大小申请]
 
 ```c
 void byteQueue_writeBytes(byteQueue_tt* pByteQueue, const void* pInBytes, size_t nLength)
@@ -383,7 +383,7 @@ void byteQueue_writeBytes(byteQueue_tt* pByteQueue, const void* pInBytes, size_t
 }
 ```
 
-## 10. 读取数据
+##  读取数据
 
 ```c
 bool byteQueue_readBytes(byteQueue_tt* pByteQueue, void* pOutBytes, size_t nMaxLengthToRead, bool bPeek /*= false*/ )
@@ -414,7 +414,7 @@ bool byteQueue_readBytes(byteQueue_tt* pByteQueue, void* pOutBytes, size_t nMaxL
 }
 ```
 
-## 10. 重置容量
+## 重置容量
 
 ```c
 void byteQueue_reserve(byteQueue_tt* pByteQueue, size_t nCapacity)
