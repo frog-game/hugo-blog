@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "gitlab-pre-receive-hook服务器钩子主要用于对推送钱的代码进行check,格式化,如果没达到要求禁止git提交"
+description: "gitlab-pre-receive-hook服务器钩子,主要用于对推送前的代码,资源进行check,格式化,如果没达到要求禁止git提交,会被无情打退"
 weight:
 draft: false # 是否为草稿
 comments: true
