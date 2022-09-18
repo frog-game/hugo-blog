@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "除了主线程以外，其它线程和其它Lua对象一样都是垃圾回收的对象。当新建一个线程时，线程会压入栈，这样能确保新线程不会成为垃圾"
+description: "对lua源代码阅读做得记录，还有lua使用中遇到的一些坑和和经验赏析"
 weight:
 draft: false # 是否为草稿
 comments: true

@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "序列号: 在建立连接的时候有计算机生成的随机数并作为初始值，通过syn包传给接收端主机，每发一次数据，就累加一次该数据字节数的大小，主要是用来解决网络包乱序问题"
+description: "网络tcp udp 三次握手,四次挥手,滑动窗口,等等方面的图示,解析"
 weight:
 draft: false # 是否为草稿
 comments: true

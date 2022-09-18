@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "每当我们接收一份新的版本，代码拿到手要做的第一件事就是查看 git log，看看这份代码的提交记录"
+description: "gitlab-pre-receive-hook服务器钩子主要用于对推送钱的代码进行check,格式化,如果没达到要求禁止git提交"
 weight:
 draft: false # 是否为草稿
 comments: true

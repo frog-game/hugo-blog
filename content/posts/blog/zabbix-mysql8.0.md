@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "Ubuntu20.04+mysql8.0+zabbix6.0+elk+filebeat+logstash+grafana"
+description: "Ubuntu20.04+mysql8.0+zabbix6.0+elk+filebeat+logstash+grafana 搭建的游戏日志监控系统,已用于frog-game-frame框架"
 weight:
 draft: false # 是否为草稿
 comments: true

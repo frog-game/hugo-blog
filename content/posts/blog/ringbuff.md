@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "假设要申请的空间 环形buff`结构体大小为8 nWriteIndex 写指针索引 nReadIndex 读指针索引 环形buff初始化 清空结构体"
+description: "用c代码写的ringbuff代码解析,ringbuff用于从网络中读取到的数据进行存储，解析，此ringbuff已经用于frog-game-frame框架"
 weight:
 draft: false # 是否为草稿
 comments: true

@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "网络编程流程 堵塞IO 非堵塞IO 信号驱动IO 异步io模型 多路复用 单reactor 单reactor 多进程模型 单reactor模型 + 任务队列 + 线程池"
+description: "网络IO模型, reactor 图示"
 weight:
 draft: false # 是否为草稿
 comments: true

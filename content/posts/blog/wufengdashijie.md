@@ -9,7 +9,7 @@ categories:
 -
 tags:
 -
-description: "无缝大地图只是外在表现，其实都是有缝隙的"
+description: "无缝大地图图示,方法总结"
 weight:
 draft: false # 是否为草稿
 comments: true
