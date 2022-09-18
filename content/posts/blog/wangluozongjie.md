@@ -30,7 +30,7 @@ relative: false
 
 ## tcp 握手挥手
 
-![Typoraimage-20220224184102800](image/网络相关.assets/Typoraimage-20220224184102800.png)
+![Typoraimage-20220224184102800](Typoraimage-20220224184102800.png)
 
 序列号: 在建立连接的时候有计算机生成的随机数并作为初始值，通过syn包传给接收端主机，每发一次数据，就累加一次该数据字节数的大小，主要是用来解决网络包乱序问题
 
@@ -64,7 +64,7 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
 ### TCP四元组
 
-![Typoraimage-20220224221406178](image/网络相关.assets/Typoraimage-20220224221406178.png)
+![Typoraimage-20220224221406178](Typoraimage-20220224221406178.png)
 
 ### 有一个ip的服务器监听了一个端口，他的TCP的最大连接数是多少
 
@@ -80,7 +80,7 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
 ### udp和tcp的区别
 
-![Typoraimage-20220224223114443](image/网络相关.assets/Typoraimage-20220224223114443.png)
+![Typoraimage-20220224223114443](Typoraimage-20220224223114443.png)
 
 > 目标和源端口号：主要是告诉udp协议应该吧报文发给那个进程
 >
@@ -161,7 +161,7 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
 ### TCP 连接建立(3次握手)
 
-![Typoraimage-20220225100510426](image/网络相关.assets/Typoraimage-20220225100510426.png)
+![Typoraimage-20220225100510426](Typoraimage-20220225100510426.png)
 
 一开始客户端和服务器都处于close状态
 
@@ -171,17 +171,17 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
    ​														**<font color='red'>三次握手第一个报文 SYN 报文</font>**
 
-   ![Typoraimage-20220225104211781](image/网络相关.assets/Typoraimage-20220225104211781.png)
+   ![Typoraimage-20220225104211781](Typoraimage-20220225104211781.png)
 
 3. 服务器收到客户端报文，首先服务器会随机初始化自己的server_isn ,将server _isn号存入序列号中，并把客服端的client_isn +1 存入确认应答号中，同时吧SYN和ACK标志位置为1，此包不会包含应用层数据，发送出去以后服务器进入syc_rcvd状态
 
    ​														**<font color='red'>三次握手第二个报文 SYN  + ACK报文</font>**
 
-   ![Typoraimage-20220225112002291](image/网络相关.assets/Typoraimage-20220225112002291.png)
+   ![Typoraimage-20220225112002291](Typoraimage-20220225112002291.png)
 
 4. 客服端收到服务器发送的syn + ack 报文以后，最后还会向服务器发送一个ACK确认报文，并把server_isn 序列号 + 1 存入确认应答号，然后把ACK标志位设置成1，此包这个时候可以带应用层数据发过去，这个时候客户端进入进入established状态，服务器收到ACK确认应答包以后也进入established状态
 
-   ![Typoraimage-20220225112428023](image/网络相关.assets/Typoraimage-20220225112428023.png)
+   ![Typoraimage-20220225112428023](Typoraimage-20220225112428023.png)
    
    
    
@@ -195,11 +195,11 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
    1. 可以防止重复历史链接数
    
-      ![Typoraimage-20220225142755404](image/网络相关.assets/Typoraimage-20220225142755404.png)
+      ![Typoraimage-20220225142755404](Typoraimage-20220225142755404.png)
       
       
       
-      2. 同步双方初始序列号![Typoraimage-20220225192654067](image/网络相关.assets/Typoraimage-20220225192654067.png)
+      2. 同步双方初始序列号![Typoraimage-20220225192654067](Typoraimage-20220225192654067.png)
       
 
    四次握手其实也能够可靠的同步双方的初始化序号，但是由于第二步和第一步可以优化成一步，所以就成了3次握手，
@@ -212,7 +212,7 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
    
       如果多次堵塞，多次发送syn，那么服务器就会多次创建，造成冗余的链接。
    
-      ![Typoraimage-20220225200151650](image/网络相关.assets/Typoraimage-20220225200151650.png)
+      ![Typoraimage-20220225200151650](Typoraimage-20220225200151650.png)
       
       总结：为什么不使用两次握手或者四次握手
       
@@ -230,7 +230,7 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
 我们知道tcp链接需要3次握手，假设攻击者短时间内，伪造不同的ip地址syn报文，服务器每接收一个就进入syn_rcvd 状态，但服务器发送出去的ack + syn报文，无法得知位置ip主机的ack应答，久而久之就会占满服务器syn接收队列（未连接队列）使得服务器不能为正常用户服务
 
-![Typoraimage-20220225213045690](image/网络相关.assets/Typoraimage-20220225213045690.png)
+![Typoraimage-20220225213045690](Typoraimage-20220225213045690.png)
 
 解决办法一
 
@@ -256,15 +256,15 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
 ​	首先是正常的3次握手流程
 
-![Typoraimage-20220225222303853](image/网络相关.assets/Typoraimage-20220225222303853.png)
+![Typoraimage-20220225222303853](Typoraimage-20220225222303853.png)
 
-![Typoraimage-20220225222315043](image/网络相关.assets/Typoraimage-20220225222315043.png)
+![Typoraimage-20220225222315043](Typoraimage-20220225222315043.png)
 
-![Typoraimage-20220225222353516](image/网络相关.assets/Typoraimage-20220225222353516.png)
+![Typoraimage-20220225222353516](Typoraimage-20220225222353516.png)
 
 ### TCP 连接断开
 
-![Typoraimage-20220226122921061](image/网络相关.assets/Typoraimage-20220226122921061.png)
+![Typoraimage-20220226122921061](Typoraimage-20220226122921061.png)
 
 1. 客服端，打算关闭连接，此时会发送一个tcp首部FIN标志为1的报文，之后客户端进入fin_wait1状态
 
@@ -335,7 +335,7 @@ linux 中一般设置为60s 也就是一个msl是30秒
 
 1. 防止旧链接的数据包
 
-   ![Typoraimage-20220226140416629](image/网络相关.assets/Typoraimage-20220226140416629.png)
+   ![Typoraimage-20220226140416629](Typoraimage-20220226140416629.png)
 
    如上图的sql =301的包被网络延迟了，这个时候time_wait设置的时间很短，或者没有，上次的链接的被关闭
 
@@ -347,7 +347,7 @@ linux 中一般设置为60s 也就是一个msl是30秒
 
 2. 保证连接正确关闭
 
-   ![Typoraimage-20220226142154704](image/网络相关.assets/Typoraimage-20220226142154704.png)
+   ![Typoraimage-20220226142154704](Typoraimage-20220226142154704.png)
 
    如果最后的ack丢失了，服务器就会一直处于last_ack状态，如果这个时候客服端发起新的连接，那么这个时候服务器因为处于last_ack状态，所以会发送rst报文给客服端，让客服端直接终止链接
 
@@ -403,11 +403,11 @@ net.ipv4.tcp_keepalive_probes=9 #表示检测 9 次⽆响应，认为对⽅是�
 
 1. 服务器调用close(),不管什么数据一缕发送rst报文进行强制关闭
 
-![Typoraimage-20220226153823549](image/网络相关.assets/Typoraimage-20220226153823549.png)
+![Typoraimage-20220226153823549](Typoraimage-20220226153823549.png)
 
 2. 服务器调用shutdown() ，如果是正常数据还是走正常数据接收流程，一直到数据发送完毕，然后发送fin报文正常关闭
 
-   ![Typoraimage-20220226154426825](image/网络相关.assets/Typoraimage-20220226154426825.png)
+   ![Typoraimage-20220226154426825](Typoraimage-20220226154426825.png)
 
 
 ## tcp重传
@@ -420,23 +420,23 @@ net.ipv4.tcp_keepalive_probes=9 #表示检测 9 次⽆响应，认为对⽅是�
 
 1. 数据包丢失，因为数据包丢失，所以B无法发送ack确认码下去，A无法收到ACK确认码，无法知道服务器是否收到数据就会在特定时间间隔内，触发重传
 
-   ![Typoraimage-20220226163246921](image/网络相关.assets/Typoraimage-20220226163246921.png)
+   ![Typoraimage-20220226163246921](Typoraimage-20220226163246921.png)
 
 2. 确认应答丢失
 
-   ![Typoraimage-20220226163627122](image/网络相关.assets/Typoraimage-20220226163627122.png)
+   ![Typoraimage-20220226163627122](Typoraimage-20220226163627122.png)
 
 #### 超时重传时间设置多少最好
 
 1. RTT 包的往返时间
 
-   ![Typoraimage-20220226164331620](image/网络相关.assets/Typoraimage-20220226164331620.png)
+   ![Typoraimage-20220226164331620](Typoraimage-20220226164331620.png)
 
    2. 时间设置的过长过短发生的情况
 
-      ![Typoraimage-20220226170929156](image/网络相关.assets/Typoraimage-20220226170929156.png)
+      ![Typoraimage-20220226170929156](Typoraimage-20220226170929156.png)
 
-      ![Typoraimage-20220226171032355](image/网络相关.assets/Typoraimage-20220226171032355.png)
+      ![Typoraimage-20220226171032355](Typoraimage-20220226171032355.png)
 
 当RTO较大时候，重发就满，丢了老半天才重发，没有效率，性能差
 
@@ -444,13 +444,13 @@ net.ipv4.tcp_keepalive_probes=9 #表示检测 9 次⽆响应，认为对⽅是�
 
 所有综合上述，所以我们应该 RTO应该略大于RTT
 
-![Typoraimage-20220226171549098](image/网络相关.assets/Typoraimage-20220226171549098.png)
+![Typoraimage-20220226171549098](Typoraimage-20220226171549098.png)
 
 ### 快速重传
 
 这个不是以时间为驱动，而是以数据为驱动
 
-![Typoraimage-20220226173602996](image/网络相关.assets/Typoraimage-20220226173602996.png)
+![Typoraimage-20220226173602996](Typoraimage-20220226173602996.png)
 
 如上发了1，2，3，4，5 共5份数据
 
@@ -474,7 +474,7 @@ net.ipv4.tcp_keepalive_probes=9 #表示检测 9 次⽆响应，认为对⽅是�
 
 SACK方法[如果能支持SACK，那么必须双方都打开]
 
-![Typoraimage-20220226222628426](image/网络相关.assets/Typoraimage-20220226222628426.png)
+![Typoraimage-20220226222628426](Typoraimage-20220226222628426.png)
 
    Left Edge:代表已收到的第一个不连续的第一个序号
 
@@ -482,13 +482,13 @@ SACK方法[如果能支持SACK，那么必须双方都打开]
 
 ​	即左闭右开区间，通过ACK和sack发送方就能很快的确定接收方有哪些数据没有被收到
 
-![Typoraimage-20220226223058055](image/网络相关.assets/Typoraimage-20220226223058055.png)
+![Typoraimage-20220226223058055](Typoraimage-20220226223058055.png)
 
 如果上面触发了重传会这样处理
 
 > 直接重传300 -499丢失的块，然后把ack变成700再次触发快速重传把700 -899补上
 
-![Typoraimage-20220226223125480](image/网络相关.assets/Typoraimage-20220226223125480.png)
+![Typoraimage-20220226223125480](Typoraimage-20220226223125480.png)
 
 #### DACK
 
@@ -496,7 +496,7 @@ SACK方法[如果能支持SACK，那么必须双方都打开]
 
 1. ACK 丢包
 
-   ![Typoraimage-20220226225136413](image/网络相关.assets/Typoraimage-20220226225136413.png)
+   ![Typoraimage-20220226225136413](Typoraimage-20220226225136413.png)
 
    - 接收方发送给发送方的2个ack都丢失了，所以发送方超时后，重传了第一个数据包3000 - 3499
 
@@ -508,7 +508,7 @@ SACK方法[如果能支持SACK，那么必须双方都打开]
 
 2. 网络延迟
 
-   ![Typoraimage-20220226231034362](image/网络相关.assets/Typoraimage-20220226231034362.png)
+   ![Typoraimage-20220226231034362](Typoraimage-20220226231034362.png)
 
    - 数据包 1000- 1499 被网络延迟了，导致发送方没有收到ack1500的确认报文
 
@@ -538,13 +538,13 @@ SACK方法[如果能支持SACK，那么必须双方都打开]
 
 所以这样的传输方式很大的弊端：就是包的往返时间越长，网络的吞吐就越大
 
-![Typoraimage-20220227001725523](image/网络相关.assets/Typoraimage-20220227001725523.png)
+![Typoraimage-20220227001725523](Typoraimage-20220227001725523.png)
 
 为了解决这样的问题，TCP发明了一个牛逼的概念：**<font color='red'>滑动窗口</font>**
 
 如果有了滑动窗口，那么就可以指定窗口的大小，窗口的大小无需等待对方的确认应答，就可以继续发送数据的最大值
 
-![Typoraimage-20220227002300682](image/网络相关.assets/Typoraimage-20220227002300682.png)
+![Typoraimage-20220227002300682](Typoraimage-20220227002300682.png)
 
 上面ack300 即使丢了，但是因为我们收到了ack400 那么我们就可以认为400之前的数据都收到了，这种方式我们称为累计确认
 
@@ -560,7 +560,7 @@ tcp头里面有个字段叫window 也就是窗口大小
 
 ### 发送窗口
 
-![Typoraimage-20220227093925294](image/网络相关.assets/Typoraimage-20220227093925294.png)
+![Typoraimage-20220227093925294](Typoraimage-20220227093925294.png)
 
 SND.WND : 表示发送窗口的大小,由接收窗口控制
 
@@ -578,7 +578,7 @@ SND.NET  : 表示未发送但是还在接收窗口可处理空间的第一个字
 
 ### 接收窗口
 
-![Typoraimage-20220227095004353](image/网络相关.assets/Typoraimage-20220227095004353.png)
+![Typoraimage-20220227095004353](Typoraimage-20220227095004353.png)
 
 RCV.NXT :  希望从发送方发过来的下一个字节数据的序列号
 
@@ -605,11 +605,11 @@ RCV.WND : 接收窗口的大小，会通过tcp头部报文里面的window字段�
 - 假设接收端和发送端窗口相同，都为200
 - 假设两个设备在传输过程中都保证窗口大小不变，不收外界影响
 
-![Typoraimage-20220227162814714](image/网络相关.assets/Typoraimage-20220227162814714.png)
+![Typoraimage-20220227162814714](Typoraimage-20220227162814714.png)
 
 ### 动态变化窗口大小场景
 
-![Typoraimage-20220227171544548](image/网络相关.assets/Typoraimage-20220227171544548.png)
+![Typoraimage-20220227171544548](Typoraimage-20220227171544548.png)
 
 当发送方变成窗口变成0的时候其实发送方还会定时的发送探测报文，以便知道接收方改变了窗口
 
@@ -617,19 +617,19 @@ RCV.WND : 接收窗口的大小，会通过tcp头部报文里面的window字段�
 
 当服务端系统资源⾮常紧张的时候，操⼼系统可能会直接减少了接收缓冲区⼤⼩，这时应⽤程序⼜⽆法及时读取缓 存数据，那么这时候就有严᯿的事情发⽣了，会出现数据包丢失的现象。
 
-![Typoraimage-20220227172125598](image/网络相关.assets/Typoraimage-20220227172125598.png)
+![Typoraimage-20220227172125598](Typoraimage-20220227172125598.png)
 
 为了避免这种情况 TCP规定不允许系统收缩缓存的时候同时减少窗口大小，而是采用先收缩窗口，过段时间在减少缓存的办法
 
 ### 窗口关闭死锁问题
 
-![Typoraimage-20220227172125598](image/网络相关.assets/Typoraimage-20220227172125598-16530998366678.png)
+![Typoraimage-20220227172125598](Typoraimage-20220227172125598-16530998366678.png)
 
 ### 如果解决这种死锁问题
 
 为了解决这种死锁问题，TCP为每个连接设有与一个持续定时器如果定时器超时就会发送窗口探测报文
 
-![Typoraimage-20220227172621985](image/网络相关.assets/Typoraimage-20220227172621985.png)
+![Typoraimage-20220227172621985](Typoraimage-20220227172621985.png)
 
 - 如果接收窗⼝仍然为 0，那么收到这个报⽂的⼀⽅就会᯿新启动持续计时器；
 -  如果接收窗⼝不是 0，那么死锁的局⾯就可以被打破了。 
@@ -638,7 +638,7 @@ RCV.WND : 接收窗口的大小，会通过tcp头部报文里面的window字段�
 
 ### 糊涂窗口综合症
 
-![Typoraimage-20220227181346332](image/网络相关.assets/Typoraimage-20220227181346332.png)
+![Typoraimage-20220227181346332](Typoraimage-20220227181346332.png)
 
 
 
@@ -707,7 +707,7 @@ swnd = min(cwnd,rwnd)
 
 慢启动的算法就是，当发送方每收到一个ack，拥塞窗口cwnd的大小就加1
 
-![Typoraimage-20220227183510546](image/网络相关.assets/Typoraimage-20220227183510546.png)
+![Typoraimage-20220227183510546](Typoraimage-20220227183510546.png)
 
 那么慢启动什么时候是个头呢，
 
@@ -721,7 +721,7 @@ swnd = min(cwnd,rwnd)
 
 它的规则是：每当收到⼀个 ACK 时，cwnd 增加 1/cwnd
 
-![Typoraimage-20220227183953349](image/网络相关.assets/Typoraimage-20220227183953349.png)
+![Typoraimage-20220227183953349](Typoraimage-20220227183953349.png)
 
    拥塞避免算法就是将原本慢启动算法的指数增⻓变成了线性增⻓，还是增⻓阶段，但是增⻓ 速度缓慢了⼀些。 就这么⼀直增⻓着后，⽹络就会慢慢进⼊了拥塞的状况了，于是就会出现丢包现象，这时就需要对丢失的数据包进 ⾏᯿传。 当触发了᯿传机制，也就进⼊了**<font color='red'>拥塞发⽣算法</font>**。
 
@@ -731,7 +731,7 @@ swnd = min(cwnd,rwnd)
 
 超时重传
 
-![Typoraimage-20220227184235541](image/网络相关.assets/Typoraimage-20220227184235541.png)
+![Typoraimage-20220227184235541](Typoraimage-20220227184235541.png)
 
 因为想途中的cwnd从12突然变到了1，然后开始慢启动，可以看到此种方法很容易马上回到解放前，方法也很激进，容易造成网络卡顿，那么发生这种情况我们还有没有更好的办法呢，其实有的也就是前面写的快速重传
 
@@ -751,7 +751,7 @@ swnd = min(cwnd,rwnd)
 
 - ssthresh = cwnd 
 
-  ![Typoraimage-20220227185521711](image/网络相关.assets/Typoraimage-20220227185521711.png)
+  ![Typoraimage-20220227185521711](Typoraimage-20220227185521711.png)
 
 快速恢复算法如下
 
@@ -787,7 +787,7 @@ struct {
 
 ## RST 标识
 
-![Typoraimage-20220228175226746](image/网络相关.assets/Typoraimage-20220228175226746.png)
+![Typoraimage-20220228175226746](Typoraimage-20220228175226746.png)
 
 ### 收到RST应用层处理情况
 
@@ -854,7 +854,7 @@ RST 一般出现在异常情况，一般为`对端的端口不可用`和`socket 
 
 至于这个接收窗口是啥，如下图
 
-![Typoraimage-20220228215232168](image/网络相关.assets/Typoraimage-20220228215232168.png)
+![Typoraimage-20220228215232168](Typoraimage-20220228215232168.png)
 
 ### 为什么一定要校验在范围内
 
@@ -862,7 +862,7 @@ RST 一般出现在异常情况，一般为`对端的端口不可用`和`socket 
 
 ### socket recv和send 情况
 
-![Typoraimage-20220228220953537](image/网络相关.assets/Typoraimage-20220228220953537.png)
+![Typoraimage-20220228220953537](Typoraimage-20220228220953537.png)
 
 ### 如果接收缓冲区有数据，这个时候close
 
