@@ -200,19 +200,22 @@
 }
 
 .post-content code {
-    margin: auto 4px;
-    padding: 4px 6px;
-    font-size: 0.78em;
-    line-height: 1.5;
-    background: var(--code-bg);
-    border-radius: 2px;
+  font-size: 14px;
+  word-wrap: break-word;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  color:  rgb(239, 112, 96);;
+  background-color: rgba(27,31,35,.05);
+  font-family: Operator Mono, Consolas, Monaco, Menlo, monospace;
+  word-break: break-all;
 }
 
 .post-content pre code {
     display: block;
     margin: auto 0;
     padding: 10px;
-    color: rgb(213, 213, 214);
+    color: rgb(214, 213, 213);
     background: var(--hljs-bg) !important;
     border-radius: var(--radius);
     overflow-x: auto;
@@ -414,4 +417,113 @@ h6:hover .anchor {
 
 h1 > a > svg {
     display: inline;
+}
+
+/* 为h2和h3自动添加序号 */
+.post-content h2:before
+{
+    /*内容显示为：计数器h2counter的值转换为中文数字格式+顿号，格式：一、*/
+    content: counter(h2counter, cjk-ideographic) '\3001';
+}
+.post-content h2
+{
+    /*重置计数器h3counter的值*/
+    counter-reset: h3counter;
+    /*计数器h2counter的值增加1*/
+    counter-increment: h2counter;
+}
+
+.post-content h3:before
+{
+    /*内容显示为：计数器h2counter的值+点+计数器h3counter的值，格式：1.1*/
+    content: counter(h2counter) "." counter(h3counter) " ";
+}
+.post-content h3
+{
+    counter-reset: h4counter;
+    counter-increment: h3counter;
+}
+
+.post-content h4:before
+{
+    content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) " ";
+}
+.post-content h4
+{
+    counter-reset: h5counter;
+    counter-increment: h4counter;
+}
+
+.post-content h5:before
+{
+    content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) "." counter(h5counter) " ";
+}
+.post-content h5
+{
+    counter-reset: h6counter;
+    counter-increment: h5counter;
+}
+
+.post-content h6:before
+{
+    content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) "." counter(h5counter) "." counter(h6counter) " ";
+}
+.post-content h6
+{
+    counter-increment: h6counter;
+}
+
+
+/* 侧边栏自动编号 */
+.toc li:before
+{
+    /*内容显示为：计数器的值转换为中文数字格式+顿号，格式：一、*/
+    content: counter(outline-h2, cjk-ideographic) '\3001';
+}
+.toc li
+{
+    /*重置计数器h3counter的值*/
+    counter-reset: outline-h3;
+    /*计数器h2counter的值增加1*/
+    counter-increment: outline-h2;
+}
+
+.toc li ul li:before
+{
+    /*内容显示为：计数器h2counter的值+点+计数器h3counter的值，格式：1.1*/
+    content: counter(outline-h2) "." counter(outline-h3) " ";
+}
+.toc li ul li
+{
+    counter-reset: outline-h4;
+    counter-increment: outline-h3;
+}
+
+.toc li ul li ul li:before
+{
+    content: counter(outline-h2) "." counter(outline-h3) "." counter(outline-h4) " ";
+}
+.toc li ul li ul li
+{
+    counter-reset: outline-h5;
+    counter-increment: outline-h4;
+}
+
+.toc li ul li ul li ul li:before
+{
+    content: counter(outline-h2) "." counter(outline-h3) "." counter(outline-h4) "." counter(outline-h5) " ";
+}
+.toc li ul li ul li ul li
+{
+    counter-reset: outline-h6;
+    counter-increment: outline-h5;
+}
+
+.toc li ul li ul li ul li ul li:before
+{
+    content: counter(outline-h2) "." counter(outline-h3) "." counter(outline-h4) "." counter(outline-h5) "."  counter(outline-h6);
+}
+.toc li ul li ul li ul li ul li
+{
+    counter-increment: outline-h6;
 }

@@ -1,34 +1,4 @@
----
-title: "lua源码赏析笔记"
-date: 2022-09-13T01:30:29+08:00
-lastmod: 2022-09-13T01:30:29+08:00
-author: ["frog"]
-keywords:
--
-categories:
--
-tags:
--
-description: ""
-weight:
-draft: false # 是否为草稿
-comments: true
-reward: true # 打赏
-mermaid: true #是否开启mermaid
-showToc: true # 显示目录
-TocOpen: true # 自动展开目录
-hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
-disableShare: true # 底部不显示分享栏
-showbreadcrumbs: true #顶部显示路径
-cover:
-    lua源码赏析笔记: "" #图片路径例如：posts/tech/123/123.png
-    caption: "" #图片底部描述
-    alt: ""
-    relative: false
----
-
-
-## 1. 基础类型
+## 基础类型
 
 | 定义                                                         | 解释                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -44,7 +14,7 @@ cover:
 | LUA_TTHREAD                                                  | 协程，只是拷贝了一个栈空间                                   |
 | LUA_NUMTAGS                                                  | tag 总数                                                     |
 
-### 1.1. LUA_TTHREAD
+### LUA_TTHREAD
 
 1. 代表协程类型
 
@@ -52,7 +22,7 @@ cover:
 3.  每次调用lua_newstate的时候都会创建一个新的luastate,不同的luastate完全独立，之间不共享任何数据
 4.  协程提供了新的api接口和*lua_resetthread*,*coroutine.close* 会使协程进入死亡状态,并且关闭所有的close变量
 
-### 1.2. <font color='red'>full userdata和light userdata区别</font>
+### <font color='red'>full userdata和light userdata区别</font>
 
 | 区别     | **full userdata**                                | **light userdata**                            |
 | -------- | ------------------------------------------------ | --------------------------------------------- |
@@ -61,7 +31,7 @@ cover:
 | 元表     | 有独立的元表                                     | 没有独立的元表                                |
 | 创建     | void *lua_newuserdata(lua_State *L, size_t size) | lua_pushlightuserdata(lua_State *L, void *p); |
 
-#### 1.2.1. <font color='red'>full userdata</font>
+#### <font color='red'>full userdata</font>
 
 ```c
 //c文件
@@ -209,7 +179,7 @@ for k,v in pairs(getmetatable(objStudent)) do
 end
 ```
 
-#### 1.2.2. <font color='red'>light userdata</font>
+#### <font color='red'>light userdata</font>
 
 ```c
 //C文件
@@ -306,7 +276,7 @@ data = input.x;
 print(data)
 ```
 
-#### 1.2.3. **<font color='red'>需要注意地方</font>**
+#### **<font color='red'>需要注意地方</font>**
 
 | <span style="display:inline-block;width: 40px">序号</span> | 注意项                                                       |
 | :--------------------------------------------------------- | ------------------------------------------------------------ |
@@ -336,7 +306,7 @@ print(data)
 | 24                                                         | **ipairs 仅仅遍历值，按照索引升序遍历，索引中断停止遍历。不能返回 nil,如果遇到 nil 则退出。它只能遍历到集合中出现的第一个不是整数的 key。 pairs 能遍历集合的所有元素。即 pairs 可以遍历集合中所有的 key，并且除了迭代器本身以及遍历表本身还可以返回 nil。** |
 | 25                                                         | lua [布尔类型](https://so.csdn.net/so/search?q=布尔类型&spm=1001.2101.3001.7020)只有两个取值false和true. 但要注意lua中所有的值都可以作为条件. 在控制结构的条件中除了false和nil为假, 其他值都为真。**lua认为 0 和 空字符串都是真！！** |
 
-##### 1.2.3.1. <font color='red'>pairs和ipairs 例子比较</font>
+##### <font color='red'>pairs和ipairs 例子比较</font>
 
 ```lua
 test = {["xxx"] = nil , tt = "tabao"}
@@ -407,7 +377,7 @@ for i,v in pairs(tab) do
 输出：a，b，c，d。
 ```
 
-## 2. lua 模块 import 和 require 差异
+## lua 模块 import 和 require 差异
 
 载入一个模块 
 `import()` 与 `require()` 功能相同，但具有一定程度的自动化特性。 
@@ -418,7 +388,7 @@ for i,v in pairs(tab) do
 
 `import`还有一个优势是假设：`A/B/`下有两个文件`c.lua`,`d.lua`，如果在`c`中用到了`d`话,`require( "A/B/d")`,`import(".d")` ，如果后面目录结构改了 ,`c`,`d`都到了`A`目录下,那对应的要修改`require("A/d)` 而`import`可以不用修改。
 
-## 3. lua 正则表达式
+## lua 正则表达式
 
 测试工具地址:https://wiki.luatos.com/pages/emulator.html
 
@@ -531,7 +501,7 @@ print(string.gsub(test, "/%*.-%*/", "<COMMENT>"))
 
 
 
-## 4. lua字符串管理
+## lua字符串管理
 
 ```c
 typedef struct TString {
@@ -554,9 +524,9 @@ typedef struct TString {
 } TString;
 ```
 
-### 4.1. 字符串创建方式
+### 字符串创建方式
 
-#### 4.1.1. 全局字符串表
+#### 全局字符串表
 
 ```c
 typedef struct stringtable {
@@ -566,15 +536,15 @@ typedef struct stringtable {
 } stringtable;
 ```
 
-![Typoraimage-20220405151905211](Typoraimage-20220405151905211.png)
+![Typoraimage-20220405151905211](image/lua源码赏析笔记.assets/Typoraimage-20220405151905211.png)
 
-#### 4.1.2. 链表方式
+#### 链表方式
 
 相同`hash`字符串存储在 `stringtable strt` 链表结构上 一般`短字符串`会使用这种方式存储
 
-![Typoraimage-20220405131015805](Typoraimage-20220405131015805.png)
+![Typoraimage-20220405131015805](image/lua源码赏析笔记.assets/Typoraimage-20220405131015805.png)
 
-#### 4.1.3. hashMap缓存方式
+#### hashMap缓存方式
 
 下图中N是数组行，M是数组列
 
@@ -582,7 +552,7 @@ i的下标值通过`unsigned int i = point2uint(str) % STRCACHE_N`hash求得
 
 j的最大值固定就是下面的宏函数 `STRCACHE_M 2`
 
-![Typoraimage-20220405133449863](Typoraimage-20220405133449863.png)
+![Typoraimage-20220405133449863](image/lua源码赏析笔记.assets/Typoraimage-20220405133449863.png)
 
 下面两个函数`luaS_new` `luaS_newlstr`是创建字符串的核心函数
 
@@ -700,11 +670,11 @@ static TString *createstrobj (lua_State *L, size_t l, int tag, unsigned int h) {
 }
 ```
 
-#### 4.1.4. 函数调用过程
+#### 函数调用过程
 
-![Typoraimage-20220405152935968](Typoraimage-20220405152935968.png)
+![Typoraimage-20220405152935968](image/lua源码赏析笔记.assets/Typoraimage-20220405152935968.png)
 
-### 4.2. 字符串大小
+### 字符串大小
 
 字符串内容会在有效数据的结尾强制加上`\0`，所以字符串对象的总大小为:
 
@@ -720,9 +690,9 @@ static TString *createstrobj (lua_State *L, size_t l, int tag, unsigned int h) {
 //((l) + 1) l是外部传进来长短字符串的大小 +1是最后'\0'大小
 ```
 
-![Typoraimage-20220405153553699](Typoraimage-20220405153553699.png)
+![Typoraimage-20220405153553699](image/lua源码赏析笔记.assets/Typoraimage-20220405153553699.png)
 
-### 4.3. 长短字符串
+### 长短字符串
 
 ```c
 /*
@@ -736,11 +706,11 @@ static TString *createstrobj (lua_State *L, size_t l, int tag, unsigned int h) {
 #endif
 ```
 
-#### 4.3.1. 短字符串
+#### 短字符串
 
 定义:小于等于`40`个字节的字符串
 
-##### 4.3.1.1. 比较大小
+##### 比较大小
 
 因为是重复利用的，所以直接比较指针地址就可以了
 
@@ -751,9 +721,9 @@ static TString *createstrobj (lua_State *L, size_t l, int tag, unsigned int h) {
 #define eqshrstr(a,b)	check_exp((a)->tt == LUA_VSHRSTR, (a) == (b))
 ```
 
-#### 4.3.2. 长字符串
+#### 长字符串
 
-##### 4.3.2.1. 计算hash值
+##### 计算hash值
 
 长字符串不会马上计算哈希值，一般在调用`luaS_hashlongstr `时候才会去计算
 
@@ -779,7 +749,7 @@ unsigned int luaS_hash (const char *str, size_t l, unsigned int seed) {
 
 ```
 
-##### 4.3.2.2. 比较大小
+##### 比较大小
 
 ```c
 /*
@@ -797,9 +767,9 @@ int luaS_eqlngstr (TString *a, TString *b) {
 
 
 
-## 5. lua table
+## lua table
 
-### 5.1. 值对象结构
+### 值对象结构
 
 ```c
 /*
@@ -824,7 +794,7 @@ typedef union Value {
 | **lua_Integer i**   | 表示整数类型，`typedef long long lua_Integer`                |
 | **lua_Number n**    | 表示双精度浮点类型，`typedef double lua_Number`              |
 
-### 5.2. 非GC对象
+### 非GC对象
 
 从上面可以看到`非GC的对象`有`4`中
 
@@ -834,7 +804,7 @@ typedef union Value {
 - 浮点型
 - ~~**<font color='red'>int b</font>**~~(lua 5.4 数字分为整数和浮点，而i正好也可以用作bool,所以把这个给**<font color='red'>删除</font>**,和` lua_Integer i` 结合到一起了)
 
-### 5.3. GC对象
+### GC对象
 
 ```c
 union GCUnion {
@@ -859,7 +829,7 @@ union GCUnion {
 - lua 线程 (其实就是协程)
 - lua上值
 
-### 5.4. CommonHeader类型
+### CommonHeader类型
 
 ```c
 #define CommonHeader	struct GCObject *next; lu_byte tt; lu_byte marked
@@ -869,7 +839,7 @@ union GCUnion {
 - `tt` GC对象的实际类型(比如上面6中GC对象)
 - `marked` 标识GC的状态(白1 白2 黑 final)
 
-### 5.5. TValuefields 类型
+### TValuefields 类型
 
 ```c
 #define TValuefields    Value value_; int tt_
@@ -877,9 +847,9 @@ Value：存储具体数据的值
 tt_：表示这个值的类型，即所有的基础数据类型
 ```
 
-![Typoraimage-20220405220227940](Typoraimage-20220405220227940.png)
+![Typoraimage-20220405220227940](image/lua源码赏析笔记.assets/Typoraimage-20220405220227940.png)
 
-### 5.6. table 结构
+### table 结构
 
 ```c
 typedef struct Table {
@@ -910,11 +880,11 @@ typedef union Node {
 } Node;
 
 ```
-### 5.7. hash解决冲突时候的两种方法
+### hash解决冲突时候的两种方法
 
-#### 5.7.1. 闭散列
+#### 闭散列
 
-![Typoraimage-20220405163802074](Typoraimage-20220405163802074.png)
+![Typoraimage-20220405163802074](image/lua源码赏析笔记.assets/Typoraimage-20220405163802074.png)
 
 **（即开放地址法）：当发生哈希冲突时，如果该哈希表还没有被填满，那么就把该元素放到哈希表的下一个空闲的位置**
 
@@ -922,9 +892,9 @@ typedef union Node {
 
 `缺点`：一旦发生了哈希冲突，所有的冲突连接在一起，很容易产生数据”堆积”。即不同的数据占用可以利用的位置，就使得寻找其余数据的位置需要进行多次比较，就会导致查找的效率降低。
 
-#### 5.7.2. 开散列
+#### 开散列
 
-![Typoraimage-20220405164221247](Typoraimage-20220405164221247-165310038422713.png)
+![Typoraimage-20220405164221247](image/lua源码赏析笔记.assets/Typoraimage-20220405164221247-165310038422713.png)
 
 **开散列法（哈希桶）：又名链地址法，先用哈希函数计算每个数据的散列地址，把具有相同地址的元素归于同一个集合之中，把该集合处理为一个链表，链表的头节点存储于哈希表之中。**
 
@@ -932,7 +902,7 @@ typedef union Node {
 
 `缺点`:需要增加链接的指针，增加存储开销
 
-### 5.8. 新建一个table
+### 新建一个table
 
 ```c
 Table *luaH_new (lua_State *L) {
@@ -979,7 +949,7 @@ static void setnodevector (lua_State *L, Table *t, unsigned int size) {
 }
 ```
 
-### 5.9. 增加一个元素
+### 增加一个元素
 
 ```c
 /* 这个函数的主要功能将一个key插入哈希表，并返回key关联的value指针。
