@@ -69,7 +69,7 @@ cover:
 
 ## 日志监控
 
-![Typora_11_jiankongsystem1](file://D:/notes/%E8%BF%90%E7%BB%B4/zabbix/image/zabbix-mysql8.0.assets/Typora_11_jiankongsystem1.svg?lastModify=1663644074)
+![](image-20220920163317951.png)
 
 利用`Ubuntu20.04+mysql8.0+zabbix6.0+elk+filebeat+logstash+grafan` 搭建的游戏日志监控系统 能快速的`收集 查询 追踪 定位 报警问题`
 
