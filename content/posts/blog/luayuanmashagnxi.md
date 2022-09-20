@@ -8,7 +8,7 @@ keywords:
 categories:
 -
 tags:
--
+- lua
 description: "对lua源代码阅读做得记录，还有lua使用中遇到的一些坑和和经验赏析"
 weight:
 draft: false # 是否为草稿

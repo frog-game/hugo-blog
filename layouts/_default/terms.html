@@ -5,6 +5,10 @@
     {{- if eq .Title "Categories" }}
     <h1>🧩{{ .Title }}</h1>
     {{- end }}
+    {{- if eq .Title "Tags" }}
+        <h1>🧩{{ "标签" }}</h1>
+        <!-- <h1>🔖{{ .Title }}</h1> -->
+    {{- end }}
     <!-- <h1>{{ .Title }}</h1> -->
     {{- if .Description }}
     <div class="post-description">

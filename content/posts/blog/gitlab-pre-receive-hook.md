@@ -8,7 +8,7 @@ keywords:
 categories:
 -
 tags:
--
+- 运维
 description: "gitlab-pre-receive-hook服务器钩子,主要用于对推送前的代码,资源进行check,格式化,如果没达到要求禁止git提交,会被无情打退"
 weight:
 draft: false # 是否为草稿
