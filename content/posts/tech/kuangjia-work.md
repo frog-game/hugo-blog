@@ -1,5 +1,5 @@
 ---
-title: "蓝图服务器简介"
+title: "服务器简介"
 date: 2022-09-13T01:30:29+08:00
 lastmod: 2022-09-13T01:30:29+08:00
 author: ["frog"]
@@ -9,7 +9,7 @@ categories:
 -
 tags:
 - 白皮书
-description: "蓝图服务器简介"
+description: "服务器简介"
 weight:
 draft: false # 是否为草稿
 comments: true
