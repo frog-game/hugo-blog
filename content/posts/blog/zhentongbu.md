@@ -50,7 +50,7 @@ cover:
 
 假设5000个人，按一个房间10人，那么就得500个房间
 
-假设**<font color='red'>1</font>**秒的数据， 一帧我们每人**<font color='red'>16</font>**个字节的指令数据，那么**<font color='red'>16 * 10 * 15 * 500</font>** --->**<font color='red'>1,200,000Byte</font>**  --> **<font color='red'>1172KB</font>** ---> **<font color='red'>1MB</font>**带宽，对于现在的服务器完全是可以承受的
+假设<font color='red'>**1**</font>秒的数据， 一帧我们每人<font color='red'>**16**</font>个字节的指令数据，那么<font color='red'>**16 * 10 * 15 * 500**</font> ---><font color='red'>**1,200,000Byte** </font> --> <font color='red'>**1172KB**</font> ---><font color='red'>**1MB**</font>带宽，对于现在的服务器完全是可以承受的
 
 ## 选用udp还是tcp
 
