@@ -44,7 +44,7 @@ languages:
         buttons:
           - name: 🧱 搬砖
             url: posts/blog
-          - name: 👨🏻‍💻 技术
+          - name: 👨🏻‍💻 白皮书
             url: posts/tech
           - name: 📕 阅读
             url: posts/read

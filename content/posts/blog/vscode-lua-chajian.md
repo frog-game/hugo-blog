@@ -43,34 +43,34 @@ LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
 >
 >   ```
 >   LUA_MASKCALL : 调用函数时回调
->                      
+>                        
 >   LUA_MASKRET :函数返回时回调
->                      
+>                        
 >   LUA_MASKLINE :执行一行代码时候回调
->                      
+>                        
 >   LUA_MASKCOUNT :每执行count条指令时候回调
 >   ```
 > - count：只有掩码包含LUA_MASKCOUNT 这个状态时候才有效果，代表执行count次才会回调一次钩子函数
 
-`<font color='orange'>`**LUA_MASKCALL 会在调用函数时回调**  我们在追踪lua源码，可以发现在每次调用函数之前都回**ldo.c **去调用** luaD_precall **函数并检测是否设置了掩码标识，如果设置了** LUA_MASKCALL **掩码状态，就会调用 **luaD_hook** 这个回调函数
+`LUA_MASKCALL` 会在调用函数时回调  我们在追踪lua源码，可以发现在每次调用函数之前都回`ldo.c `去调用`luaD_precall` **函数并检测是否设置了掩码标识，如果设置了** `LUA_MASKCALL`掩码状态，就会调用 `luaD_hook` 这个回调函数
 
 ![202201211113975](202201211113975.png)
 
-**`<font color='orange'>`LUA_MASKRET :会在函数返回时回调 **  我们在追踪lua源码，可以发现在每次函数返回时候都会去**ldo.c ** 里面调用**luaD_poscall ** 里面的**rethook **函数 如果设置了就会调用** LUA_MASKRET **掩码状态 ， 就会调用 **luaD_hook** 这个回调函数
+`LUA_MASKRET` :会在函数返回时回调  我们在追踪lua源码，可以发现在每次函数返回时候都会去`ldo.c` 里面调用`luaD_poscall ` 里面的`rethook`函数 如果设置了就会调用`LUA_MASKRET `掩码状态 ， 就会调用 `luaD_hook`这个回调函数
 
 ![202201211154326](202201211154326.png)
 
 ![202201211156389](202201211156389.png)
 
-**`<font color='orange'>`LUA_MASKLINE :执行一行代码时候回调 **  我们在追踪lua源码，可以发现在每次执行一行指令都会去**ldebug.c ** 去调用 **luaG_traceexec** 函数 如果设置了**LUA_MASKLINE ** 掩码状态 那么久会调用**luaD_hook **函数
+`LUA_MASKLINE`:执行一行代码时候回调   我们在追踪`lua`源码，可以发现在每次执行一行指令都会去`ldebug.c` 去调用 `luaG_traceexec` 函数 如果设置了`LUA_MASKLINE` 掩码状态 那么久会调用`luaD_hook `函数
 
 ![202201211515663](202201211515663.png)
 
-**`<font color='orange'>`LUA_MASKCOUNT :执行count条指令时候回调 **  我们在追踪lua源码，可以发现每次执行一行指令都会去**ldebug.c ** 去调用 **luaG_traceexec** 函数 这个函数需要和**count **参数配合才能发挥效果，可以看到如果** L->hookcount **在一次次递减之后等于** 0 **了就会调用** luaD_hook **函数
+`LUA_MASKCOUNT` :执行`count`条指令时候回调   我们在追踪lua源码，可以发现每次执行一行指令都会去`ldebug.c ` 去调用 `luaG_traceexec` 函数 这个函数需要和`count`参数配合才能发挥效果，可以看到如果 `L->hookcount `**在一次次递减之后等于** 0 **了就会调用** `luaD_hook `函数
 
 ![202201211515663](202201211515663-16530988286073.png)
 
-综合上述我们看到最终都会调用到**luaD_hook **函数，仔细看源码观察可以看到在经过一系列判断以后会回调我们设置好的** L->hook **函数
+综合上述我们看到最终都会调用到`luaD_hook` **函数，仔细看源码观察可以看到在经过一系列判断以后会回调我们设置好的** `L->hook `函数
 
 ![202201211215165](202201211215165.png)
 
@@ -81,13 +81,13 @@ LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
 typedef void(*lua_Hook) (lua_State *L, lua_Debug *ar);
 ```
 
-可以看到返回了一个**lua_Debug **结构体 我们进入这个结构体
+可以看到返回了一个`lua_Debug `结构体 我们进入这个结构体
 
 ![202201211242014](202201211242014-16530988621344.png)
 
-这里为了兼容每个不同的lua版本，弄了个**union **联合体 写在了** lua_api_loder.h **里面
+这里为了兼容每个不同的lua版本，弄了个**union **联合体 写在了` lua_api_loder.h `里面
 
-我们进入 **lua_Debug_54 **结构体里面
+我们进入 `lua_Debug_54 `结构体里面
 
 ![202201211342005](202201211342005.png)
 
