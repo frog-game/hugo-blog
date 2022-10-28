@@ -964,4 +964,4 @@ void towerSpace_updateAoiObjMask(towerSpace_tt* pTowerSpace,int32_t iObjId,uint6
 
 ## 简单测试数据
 
-![在这里插入图片描述](watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMDI2MA==,size_16,color_FFFFFF,t_70-16669255405604.png)
+![在这里插入图片描述](2.png)
