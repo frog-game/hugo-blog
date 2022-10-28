@@ -1,38 +1,9 @@
----
-title: "四叉树lod灯塔AOI"
-date: 2022-09-13T01:30:29+08:00
-lastmod: 2022-09-13T01:30:29+08:00
-author: ["frog"]
-keywords:
--
-categories:
--
-tags:
-- 项目总结
-description: "四叉树lod灯塔AOI"
-weight:
-draft: false # 是否为草稿
-comments: true
-reward: true # 打赏
-mermaid: true #是否开启mermaid
-showToc: true # 显示目录
-TocOpen: true # 自动展开目录
-hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
-disableShare: true # 底部不显示分享栏
-showbreadcrumbs: true #顶部显示路径
-cover:
-    image: "posts/blog/AOI-tower/image-20221028105101531.png" #图片路径例如：posts/tech/123/123.png
-    caption: "" #图片底部描述
-    alt: ""
-    relative: false
----
-
 ## 一些字段的解释
 
-1. `观察者` 我可以观察到那些人。
-2. `被观察者` 那些人能观察到自己。
-3. `#define WATCHER_MODE 0x01` 观察者模式
-4. `#define MARKER_MODE 0x02` 被观察者模式
+1. 观察者：我可以观察到那些人。
+2. 被观察者：那些人能观察到自己。
+3. \#define WATCHER_MODE 0x01 观察者模式
+4. \#define MARKER_MODE 0x02 被观察者模式
 
 ## 灯塔相关[结构体]
 
@@ -143,7 +114,7 @@ int32_t registerTowerSpaceL(struct lua_State *L)
 
 ## [四叉树]lod示意图
 
-![image-20221028105101531](image-20221028105101531.png)
+![image-20221028105101531](image/AOI-tower/image-20221028105101531.png)
 
 1. 黑色大框是AOI的区域大小
 2. 每个正方形块上面都有一个灯塔
@@ -946,12 +917,12 @@ void towerSpace_updateAoiObjMask(towerSpace_tt* pTowerSpace,int32_t iObjId,uint6
 ## 在此AOI模式下微服务器大世界地图分割方法和传统进程分割方法的不同
 
 **传统大世界地图分割方法**
-![在这里插入图片描述](watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMDI2MA==,size_16,color_FFFFFF,t_70.png)
+![在这里插入图片描述](/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMDI2MA==,size_16,color_FFFFFF,t_70.png)
 此方法为垂直分割方法，将一个一二十公里的大地图分割成很多小地图放到各自的进程当中去处理数据，这种需要处理大世界地图边缝问题，需要做镜像数据管理，还有如果角色在一个进程中也就是某个小地图上面堆积，那么这个进程的压力会很大，别的进程却很休闲，这个也需要处理，总之很多麻烦。所以我们改成了微服务器水平分割加灯塔AOI方式
 
 **微服务大世界地图处理方法**
 
-![在这里插入图片描述](watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMDI2MA==,size_16,color_FFFFFF,t_70-16669255366962.png)
+![在这里插入图片描述](/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMDI2MA==,size_16,color_FFFFFF,t_70-16669255366962.png)
 
 此结构基于微服务水平分割，每个相同微服务可以并行再开很多来并行处理减少压力，比如灯塔AOI开了5个微服务我发现算力还是不够，
 那么我可以在增加新的灯塔AOI微服务来并行处理数据，所以理论上一个20公里的地图撑个10多万的人不成问题。而且这种模式在服务器不需要处理无缝问题
@@ -964,4 +935,4 @@ void towerSpace_updateAoiObjMask(towerSpace_tt* pTowerSpace,int32_t iObjId,uint6
 
 ## 简单测试数据
 
-![在这里插入图片描述](2.png)
+![在这里插入图片描述](/2.png)
