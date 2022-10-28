@@ -1,7 +1,7 @@
 ---
-title: "四叉树lod结合灯塔AOI"
-date: 2022-10-28T01:30:29+08:00
-lastmod: 2022-10-28T01:30:29+08:00
+title: "四叉树lod灯塔AOI"
+date: 2022-09-13T01:30:29+08:00
+lastmod: 2022-09-13T01:30:29+08:00
 author: ["frog"]
 keywords:
 -
@@ -9,7 +9,7 @@ categories:
 -
 tags:
 - 项目总结
-description: "玩家AOI灯塔同步"
+description: "四叉树lod灯塔AOI"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-	image: "posts/blog/AOI-tower/image-20221028105101531.png" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/AOI-tower/image-20221028105101531.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false
