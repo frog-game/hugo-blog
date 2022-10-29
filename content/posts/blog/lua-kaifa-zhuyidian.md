@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    image: "posts/blog/ringbuff/Typoraimage-20220401171227142-16530986713592.png" #图片路径例如：posts/tech/123/123.png
+    image: "posts/blog/image-20220720102135093.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false
@@ -132,11 +132,11 @@ re:SetActive(re.activeSelf == false);
 
 ### lua 对数字字符串取余
 
-![image-20220720102135093](image/lua要注意的点.assets/image-20220720102135093.png)
+![image-20220720102135093](image-20220720102135093.png)
 
 
 
-![img](image/lua要注意的点.assets/8212-970012531cb9c8c42124b8ecc599593b.png)
+![img](8212-970012531cb9c8c42124b8ecc599593b.png)
 
 `lua` 对字符串`'0'`取余，` lua`因为是弱语言所以会尝试把上面的字符串`'0'`转换成数字`0`，然后去进行取余，但是又不能对`0`进行取余所以会返回`NaN`
 
@@ -146,7 +146,7 @@ re:SetActive(re.activeSelf == false);
 
 ### lua直接对数字0取余
 
-![image-20220720102915769](image/lua要注意的点.assets/image-20220720102915769.png)
+![image-20220720102915769](image-20220720102915769.png)
 
 会直接报语法错误
 
