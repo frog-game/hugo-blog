@@ -183,7 +183,7 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 
 ### 为什么握手是3次，不是2次,4次
 
-<video src="video/tcp为什么是3次.mp4"></video>
+<iframe src="https://player.bilibili.com/player.html?aid=689566787&bvid=BV1Rm4y1F77g&cid=875426690&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
    主要是3个方面
 
