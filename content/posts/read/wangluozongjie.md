@@ -167,12 +167,12 @@ FIN:该位为1的时候，表示今后不会再有数据发送，希望断开连
 1. 服务开始监听端口，这个时候服务器处于listen状态
 2. 客户端会随机初始化序列号 client_isn，然后把这个初始值付给tcp首部的序列号字段，并把标识位syn设置成1，代表这是一个syn包，此包不包含应用层数据，发送出去以后，客服端处于sys_sent状态
 
-       **<font color='red'>**三次握手第一个报文 SYN 报文</font>
+   <font color='red'>**三次握手第一个报文 SYN 报文**</font>
 
    ![Typoraimage-20220225104211781](Typoraimage-20220225104211781.png)
 3. 服务器收到客户端报文，首先服务器会随机初始化自己的server_isn ,将server _isn号存入序列号中，并把客服端的client_isn +1 存入确认应答号中，同时吧SYN和ACK标志位置为1，此包不会包含应用层数据，发送出去以后服务器进入syc_rcvd状态
 
-       **<font color='red'>**三次握手第二个报文 SYN  + ACK报文</font>
+   <font color='red'>**三次握手第二个报文 SYN  + ACK报文**</font>
 
    ![Typoraimage-20220225112002291](Typoraimage-20220225112002291.png)
 4. 客服端收到服务器发送的syn + ack 报文以后，最后还会向服务器发送一个ACK确认报文，并把server_isn 序列号 + 1 存入确认应答号，然后把ACK标志位设置成1，此包这个时候可以带应用层数据发过去，这个时候客户端进入进入established状态，服务器收到ACK确认应答包以后也进入established状态
