@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    image: "posts/blog/wangluozongjie/Typoraimage-20220225100510426.png" #图片路径例如：posts/tech/123/123.png
+    image: "posts/read/wangluozongjie/Typoraimage-20220225100510426.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
 
@@ -457,7 +457,7 @@ SACK方法[如果能支持SACK，那么必须双方都打开]
    Left Edge:代表已收到的第一个不连续的第一个序号
 
     Right Edge:表示已收到的不连续块的最后一个序号+1
-
+    
     即左闭右开区间，通过ACK和sack发送方就能很快的确定接收方有哪些数据没有被收到
 
 ![Typoraimage-20220226223058055](Typoraimage-20220226223058055.png)
