@@ -792,7 +792,7 @@ int luaS_eqlngstr (TString *a, TString *b) {
 
 ## lua设值取值重置hash和table过程
 
-![image-20221029165707167](image/lua源码赏析笔记/image-20221029165707167.png)
+![image-20221029165707167](image-20221029165707167.png)
 
 ## lua table
 
