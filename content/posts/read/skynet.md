@@ -8,7 +8,7 @@ keywords:
 categories:
 -
 tags:
-- skynet
+- 阅读
 description: "云风skynet赏析,注解,图示"
 weight:
 draft: false # 是否为草稿

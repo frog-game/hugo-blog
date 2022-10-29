@@ -6,9 +6,9 @@ author: ["frog"]
 keywords:
 -
 categories:
--
+- 
 tags:
-- vscode
+- frog-frame-work
 description: "针对云风skynet微服器框架写的vscode-lua调试器"
 weight:
 draft: false # 是否为草稿
@@ -43,11 +43,11 @@ LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
 >
 >   ```
 >   LUA_MASKCALL : 调用函数时回调
->                        
+>                            
 >   LUA_MASKRET :函数返回时回调
->                        
+>                            
 >   LUA_MASKLINE :执行一行代码时候回调
->                        
+>                            
 >   LUA_MASKCOUNT :每执行count条指令时候回调
 >   ```
 > - count：只有掩码包含LUA_MASKCOUNT 这个状态时候才有效果，代表执行count次才会回调一次钩子函数
