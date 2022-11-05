@@ -168,6 +168,27 @@ init_cb(struct snlua *l, struct skynet_context *ctx, const char * args, size_t s
 }
 ```
 
+## 去vscode插件商场下载此插件并安装
+
+![image-20221105210016638](image-20221105210016638.png)
+
+## 用everthing 找到 frog_debug.so
+
+![image-20221105210227124](image-20221105210227124.png)
+
+##  然后放到luaclib目录下上传到服务器
+
+![image-20221104185615852](image-20221104185615852.png)
+
+## 在config里面加上两个字段
+
+```sh
+debug_ip = "127.0.0.1"
+debug_port = "9966"
+```
+
+![image-20221105012732137](image-20221105012732137.png)
+
 ## 重编skynet代码
 
 ```sh
@@ -175,32 +196,9 @@ cd skynet
 make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC 
 ```
 
-## 下载frog_debug.so
+## 在vscode上按如下填写
 
-```sh
-cd luaclib
-wget https://github.com/frog-game/frog_debugger/releases/download/1.3.1/linux-x64.zip
-unzip linux-x64.zip
-chmod 777 frog_debug.so
-rm -rf linux-x64.zip
-```
-
-![image-20221104185615852](image-20221104185615852.png)
-
-
-
-## 在config里面加上两个字段
-
-```sh
-debug_ip = "10.5.32.10" //这个换成你服务器的地址，如果服务器在虚拟机里面记得NAT转发你虚拟机的地址，然后用你装虚拟机的PC本地地址
-debug_port = "9969"
-```
-
-![image-20221104184515708](image-20221104184515708.png)
-
-## 虚拟机nat转换指导
-
-![image-20221105000909809](image-20221105000909809.png)
+![image-20221105210836279](image-20221105210836279.png)
 
 ## 创建.json文件
 
@@ -215,7 +213,7 @@ debug_port = "9969"
             "type": "lua_new",
             "request": "launch",
             "name": "Lua New Debug",
-            "host": "10.5.32.10",
+            "host": "127.0.0.1",
             "port": 9966,
             "ext": [
                 ".lua",
@@ -228,17 +226,19 @@ debug_port = "9969"
 }
 ```
 
-![image-20221104184650997](image-20221104184650997.png)
+## 我用的是wsl2,直接到你的skynet目录下启动
 
-## 到skynet examples启动skynet工程
+![image-20221105210323903](image-20221105210323903.png)
 
-直接在此目录执行
+## 如果嫌弃麻烦,可以在github直接下载example
 
-![image-20221105003433929](image-20221105003433929.png)
+example地址:https://github.com/frog-game/skynet-blueprint-debug.git
 
-## 如果嫌弃麻烦,可以在github直接下载example然后按如下图执行 ./skynet examples/config
+然后按 6到8步骤执行就可以进行调试了
 
-![image-20221105003435670](image-20221105003435670.png)
+## 利用nc命令调试skynet debug_console演示
+
+<iframe src="//player.bilibili.com/player.html?aid=262296240&bvid=BV1Ve411F7QX&cid=882497141&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
 ## 调试展示
 
