@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    image: "posts/tech/vscode-chajian-zhidao/image-20221104184650997.png" #图片路径例如：posts/tech/123/123.png
+    image: "posts/tech/vscode-chajian-zhidao/image-20221105210016638.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false
@@ -172,15 +172,19 @@ init_cb(struct snlua *l, struct skynet_context *ctx, const char * args, size_t s
 
 ![image-20221105210016638](image-20221105210016638.png)
 
-## 用everthing 找到 frog_debug.so
+## 远程调试
+
+### 用everthing 找到 frog_debug.so
 
 ![image-20221105210227124](image-20221105210227124.png)
 
-##  然后放到luaclib目录下上传到服务器
+###  然后放到luaclib目录下上传到服务器
 
 ![image-20221104185615852](image-20221104185615852.png)
 
-## 在config里面加上两个字段
+
+
+### 在config里面加上两个字段
 
 ```sh
 debug_ip = "127.0.0.1"
@@ -189,18 +193,18 @@ debug_port = "9966"
 
 ![image-20221105012732137](image-20221105012732137.png)
 
-## 重编skynet代码
+### 重编skynet代码
 
 ```sh
 cd skynet
 make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC 
 ```
 
-## 在vscode上按如下填写
+### 在vscode上按如下填写
 
-![image-20221105210836279](image-20221105210836279.png)
+![image-20221111223442496](image-20221111223442496.png)
 
-## 创建.json文件
+### 创建launch.json文件
 
 ```json
 {
@@ -209,11 +213,13 @@ make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+        
         {
-            "type": "lua_new",
+            "type": "lua_remote",
             "request": "launch",
-            "name": "Lua New Debug",
-            "host": "127.0.0.1",
+            "name": "远程调试",
+            "host": "localhost",
             "port": 9966,
             "ext": [
                 ".lua",
@@ -226,20 +232,24 @@ make linux MALLOC_STATICLIB= SKYNET_DEFINES=-DNOUSE_JEMALLOC
 }
 ```
 
-## 我用的是wsl2,直接到你的skynet目录下启动
+### 我用的是wsl2,直接到你的skynet目录下启动
 
 ![image-20221105210323903](image-20221105210323903.png)
 
-## 如果嫌弃麻烦,可以在github直接下载example
+### 如果嫌弃麻烦,可以在github直接下载example
 
 example地址:https://github.com/frog-game/skynet-blueprint-debug.git
 
 然后按 6到8步骤执行就可以进行调试了
 
-## 利用nc命令调试skynet debug_console演示
+### 利用nc命令调试skynet debug_console演示
 
 <iframe src="//player.bilibili.com/player.html?aid=262296240&bvid=BV1Ve411F7QX&cid=882497141&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
 
-## 调试展示
+### 调试展示
 
 <iframe src="//player.bilibili.com/player.html?aid=432314430&bvid=BV1XG411c7hN&cid=881607941&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
+
+## 启动进程调试方法
+
+<iframe src="//player.bilibili.com/player.html?aid=605116858&bvid=BV1h84y1y7qx&cid=888595685&page=1" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
