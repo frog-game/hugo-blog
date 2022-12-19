@@ -1,5 +1,5 @@
 ---
-title: "HybridCLR-IOS-打包-热更新"
+title: "HybridCLR IOS打包热更新"
 date: 2022-12-19T01:30:29+08:00
 lastmod: 2022-12-19T01:30:29+08:00
 author: ["frog"]
@@ -9,7 +9,7 @@ categories:
 - 
 tags:
 - HybridCLR
-description: "HybridCLR-IOS-打包-热更新"
+description: "HybridCLR IOS打包热更新"
 weight:
 draft: false # 是否为草稿
 comments: true
@@ -21,7 +21,7 @@ hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: true # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示路径
 cover:
-    image: "posts/read/Hybridclr-ios-dabao/image-20221207103651120.png" #图片路径例如：posts/tech/123/123.png
+    image: "posts/tech/Hybridclr-ios-dabao/image-20221207103651120.png" #图片路径例如：posts/tech/123/123.png
     caption: "" #图片底部描述
     alt: ""
     relative: false
