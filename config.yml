@@ -114,20 +114,20 @@ params:
 
     comments: true
     socialIcons:
-        # - name: github
-        #   url: "https://github.com/frog-game"
-        - name: twitter
-          url:  "img/twitter.png"
-        - name: facebook
+        - name: github
           url: "https://github.com/frog-game"
-        - name: instagram
-          url: "img/instagram.png"
+        # - name: twitter
+        #   url:  "img/twitter.png"
+        # - name: facebook
+        #   url: "https://github.com/frog-game"
+        # - name: instagram
+        #   url: "img/instagram.png"
         - name: QQ
           url: "img/qq.png"
-        - name: WeChat
-          url: "img/wechat.png"
+        # - name: WeChat
+        #   url: "img/wechat.png"
         - name: bilibili
-          url: "https://github.com/frog-game"
+          url: "https://space.bilibili.com/456504181"
         - name: email
           url: "mailto:505384662@qq.com"
 

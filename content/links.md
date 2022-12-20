@@ -13,21 +13,6 @@ showbreadcrumbs: false
 ---
 <div class="friend">
 
-{{< friend name="frog's Blog" url="frog-game.github.io" logo="https://tse1-mm.cn.bing.net/th/id/OIP-C.mb5H7dYDOybJXGGOYO-ViAHaGy?pid=ImgDet&rs=1" word="一个记录技术、阅读、生活的博客" >}}
+{{< friend name="Sulv's Blog" url="https://frog-game.github.io/" logo="https://wimg.588ku.com/gif/21/06/18/ce26a891668c427a212aad00ae3732e6.gif" word="一个记录技术、阅读、生活的博客" >}}
 
 </div>
-
-<div style="font-size: 16px;">
-
-|        |                              |
-| ------ | ---------------------------- |
-| 名称： | frog's Blog                  |
-| 网址： | https://frog-game.github.io/ |
-| 描述   | 一个记录生活，技术的博客     |
-|        |                              |
-
-</div>
-
-<br/>
-
-<br/>
