@@ -394,5 +394,6 @@ git clone -b v2019-1.0.0-rc --depth=1 https://github.com/focus-creative-games/il
 
 `执行上面的命令就能下载到我正在阅读的指定的tag版本`
 
+## IOS热更演示
 
-
+<iframe src="//player.bilibili.com/player.html?aid=606504489&bvid=BV1q84y147Xn&cid=930771458&page=1"allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
