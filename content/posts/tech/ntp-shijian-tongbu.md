@@ -8,7 +8,7 @@ keywords:
 categories:
 - 
 tags:
-- frog-frame-work
+- 白皮书
 description: "NTP时间同步"
 weight:
 draft: false # 是否为草稿

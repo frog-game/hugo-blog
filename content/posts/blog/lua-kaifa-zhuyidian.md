@@ -8,7 +8,7 @@ keywords:
 categories:
 - 
 tags:
-- 项目总结
+- 项目经验
 description: "lua开发经验总结,不定期持续更新"
 weight:
 draft: false # 是否为草稿
