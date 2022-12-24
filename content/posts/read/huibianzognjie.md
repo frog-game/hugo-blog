@@ -1,5 +1,5 @@
 ---
-title: "汇编阅读"
+title: "汇编总结"
 date: 2022-12-24T01:30:29+08:00
 lastmod: 2022-12-24T01:30:29+08:00
 author: ["frog"]
@@ -29,7 +29,7 @@ cover:
 
 ## 思维导图
 
- [《汇编》.xmind](huibian.xmind) 
+ [点击下载《汇编》.xmind](huibian.xmind) 
 
 ![Typora类图](《汇编》.svg)
 
