@@ -38,8 +38,11 @@ cover:
   ![image-20221204002617483](image-20221204002617483.png)
 
 - 托管代码：`托管代码`就是执行过程交由运行时管理的代码。 在这种情况下，相关的运行时称为公共语言运行时 (CLR)，不管使用的是哪种实现（例如 Mono、.NET Framework 或 .NET Core/.NET 5+）。 CLR 负责提取托管代码、将其编译成机器代码，然后执行它。 除此之外，运行时还提供多个重要服务，例如自动内存管理、安全边界、类型安全，把托管代码理解成上面的IL中间语言也行
+
 - 非托管代码：`非托管代码`（Unmanaged Code）是指直接编译成目标计算机的机器码，这些代码只能运行在编译出这些代码的计算机上，或者是其他相同处理器或者几乎一样处理器的计算机上。`非托管代码`不能享受公共语言运行库所提供的一些服务，例如内存管理、安全管理等。`非托管代码`（Unmanaged Code）不由CLR公共语言运行库执行，而是由操作系统直接执行的代码,如果非托管代码需要进行内存管理等服务，就必须显式地调用操作系统的接口，通常非托管代码调用Windows SDK所提供的API来实现内存管理。
+
 - 原生代码:`native code`是本地`cpu`的目标执行代码, 不是`IL`, 所以速度很快, 它的执行不依赖某个虚拟机或者解释器，编译后可直接依附操作系统运行，不需要经过虚拟机之类的东西
+
 - 程序集:程序集（Assembly）的文件负责封装中间语言，程序集中包含了描述所创建的方法、类以及属性的所有元数据
 
 ### 编译器
@@ -72,7 +75,149 @@ cover:
 
 ### IOS不支持JIT编译的原因
 
-- IOS并非把JIT禁止了，主要还是IOS封存了内存的[`可执行权限`]，变相的封锁了JIT编译方式
+#### 模拟一下JIT的过程
+
+JIT这么好，那它是如何实现既生成新代码，又能运行新代码的呢？
+
+首先我们要知道生成的所谓机器码到底是神马东西。一行看上去只是处理几个数字的代码，蕴含着的就是机器码。
+
+```c
+unsigned char[] macCode = {0x48, 0x8b, 0x07};
+```
+
+macCode对应的汇编指令就是：
+
+```cpp
+mov  (%rdi),%rax
+```
+
+其实可以看出机器码就是比特流，所以将它加载进内存并不困难。而问题是应该如何执行。
+
+好啦。下面我们就模拟一下执行新生成的机器码的过程。假设JIT已经为我们编译出了新的机器码，是一个求和函数的机器码：
+
+```cpp
+//求和函数
+long add(long num) {   return num + 1; }  
+
+//对应的机器码
+0x48, 0x83, 0xc0, 0x01, 0xc3 
+```
+
+首先，动态的在内存上创建函数之前，我们需要在内存上分配空间。具体到模拟动态创建函数，其实就是将对应的机器码映射到内存空间中。这里我们使用c语言做实验，利用 **mmap函数** 来实现这一点。
+
+> **头文件：**
+> \#include <unistd.h> #include <sys/mman.h>
+> **定义函数：**
+> void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offsize)
+> **函数说明：**
+> mmap()用来将某个文件内容映射到内存中，对该内存区域的存取即是直接对该文件内容的读写。
+
+因为我们想要把已经是 **比特流的“求和函数”在内存中创建出来**，同时还要运行它。所以mmap有几个参数需要注意一下。
+
+代表映射区域的保护方式，有下列组合：
+
+- PROT_EXEC 映射区域可被执行；
+- PROT_READ 映射区域可被读取；
+- PROT_WRITE 映射区域可被写入；
+
+```cpp
+#include<stdio.h>                                                                                            
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
+
+//分配内存
+void* create_space(size_t size) {
+    void* ptr = mmap(0, size,
+            PROT_READ | PROT_WRITE | PROT_EXEC,
+            MAP_PRIVATE | MAP_ANON,
+            -1, 0);   
+    return ptr;
+}
+```
+
+这样我们就获得了一块分配给我们存放代码的空间。下一步就是实现一个方法将机器码，也就是比特流拷贝到分配给我们的那块空间上去。使用 **memcpy** 即可。
+
+```cpp
+//在内存中创建函数
+void copy_code_2_space(unsigned char* m) {
+    unsigned char macCode[] = {
+        0x48, 0x83, 0xc0, 0x01,
+        c3 
+    };
+    memcpy(m, macCode, sizeof(macCode));
+}
+```
+
+然后我们在写一个main函数来处理整个逻辑：
+
+```cpp
+#include<stdio.h>                                                                                            
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
+
+//分配内存
+void* create_space(size_t size) {
+    void* ptr = mmap(0, size,
+            PROT_READ | PROT_WRITE | PROT_EXEC,
+            MAP_PRIVATE | MAP_ANON,
+            -1, 0);   
+    return ptr;
+}
+
+//在内存中创建函数
+void copy_code_2_space(unsigned char* addr) {
+    unsigned char macCode[] = {
+        0x48, 0x83, 0xc0, 0x01,
+        0xc3 
+    };
+    memcpy(addr, macCode, sizeof(macCode));
+}
+
+//main 声明一个函数指针TestFun用来指向我们的求和函数在内存中的地址
+int main(int argc, char** argv) {                                                                                              
+    const size_t SIZE = 1024;
+    typedef long (*TestFun)(long);
+    void* addr = create_space(SIZE);
+    copy_code_2_space(addr);
+    TestFun test = addr;
+    int result = test(1);
+    printf("result = %d\n", result); 
+    return 0;
+}
+```
+
+编译运行一下看下结果：
+
+```bash
+//编译
+gcc testFun.c
+//运行
+./a.out 1 
+```
+
+![image-20221223164852766](image-20221223164852766.png)
+
+**为什么iOS不能使用JIT？**
+
+OK，到此为止。这个例子模拟了动态代码在内存上的生成，和之后的运行。似乎没有什么问题呀？可不知道各位是否忽略了一个前提？那就是我们为这块区域设置的保护模式可是：可读，可写，可执行的啊！如果没有内存可读写可执行的权限，我们的实验还能成功吗？
+
+让我们把create_space函数中的“可执行”PROT_EXEC权限去掉，看看结果会是怎样的一番景象。
+
+修改代码，同时将刚才生成的可执行文件a.out删除重新生成运行。
+
+```cpp
+rm a.out vim testFun.c gcc testFun.c ./a.out 1
+```
+
+结果。。。报错了！
+
+![image-20221223164937377](image-20221223164937377.png)
+
+所以IOS并非把JIT禁止了，主要还是IOS封了内存（或者堆的[`可执行权限`]，变相的封锁了JIT编译方式
 
 ### 值类型和引用类型
 
@@ -82,7 +227,6 @@ C# 中的类型一共分为两类，一类是值类型(Value Type)，一类是�
 > 引用类型包括类(`class`)、接口(`interface`)、委托(`delegate`)、数组(`array`)等。
 >
 > 常见的简单类型如`short`、`int`、`long`、`float`、`double`、`byte`、`char`等其本质上都是结构体，对应`struct System.Int16`、`System.Int32`、`System.Int64`、`System.Single`、`System.Double`、`Syetem.Byte`、`System.Char`，因此它们都是值类型。但`string`和`object`例外，它们本质上是类，对应`class System.String`和`System.Object`，所以它们是引用类型。
->
 
 #### 值类型
 
@@ -146,6 +290,28 @@ Hybridclr是基于寄存器指令
 
 两种方式各有优缺点，基于栈的指令集很明显可移植高，但是工作效率较低。而基于寄存器指令集寄存器由硬件直接提供，工作效率高，程序受硬件约束。
 
+## 基于栈的指令集和基于寄存器指令集区别
+
+如对数字2-1的操作，基于栈和基于寄存器的区别
+
+基于栈的指令
+
+```c
+iconst_1 //将减数1压入栈顶
+iconst_2 //将被减数2压入栈顶
+isub //将栈中最上面的两个元素（2和1）弹出来，执行2-1的操作，将2-1的结果1压入栈顶
+istore_0 //将1放入局部变量表的第0个位置上。
+```
+
+![image-20221227162525137](image-20221227162525137.png)
+
+基于寄存器
+
+```c
+mov eax,2 //将2放入寄存器，
+sub eax,1//后面跟一个参数1，在现有的寄存器上减去1，在把结果放回寄存器。
+```
+
 ## Hybridclr的原理
 
 dll不过是元数据和代码的集合,aot与 热更新dll的区别只不过一个函数以aot代码方式执行，一个以解释方式执行,最后都会直接在虚拟机层面将aot和热更新dll统一对待
@@ -186,7 +352,7 @@ Hybridclr分两个工程
 
 7. `MethodBody` 方法主体，就是`调用方法时执行的代码块`，方法的主体语句必须放在花括号（即大括号 {}）中。
 
-3. `Il2CppImage` 这个结构体是程序集镜像,可以通过它来获取命名空间,class,方法,函数指针地址等等
+8. `Il2CppImage` 这个结构体是程序集镜像,可以通过它来获取命名空间,class,方法,函数指针地址等等
 
    ```c++
    typedef struct Il2CppImage
@@ -218,125 +384,125 @@ Hybridclr分两个工程
    } Il2CppImage;
    ```
 
-4. 所有的`metadata` 解析都是遵循的下面规范[ECMA-335 - Ecma International (ecma-international.org)](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)
+9. 所有的`metadata` 解析都是遵循的下面规范[ECMA-335 - Ecma International (ecma-international.org)](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)
 
    CLI中大多数`metadata`被为几十种类型，每个类型的数据组织成一个`table`如下图,如果有缺失类型,请去`ECMA-335`查看
 
    ![image-20221210204108400](image-20221210204108400.png)
-   
-5. `Portable PDB tables` .NET引入了一种新的符号文件（PDB）格式，主要用于跨平台
 
-   早期`PDB`格式是为了`C`和`C++`设计的，发展了多年以来现在已经支持`.NET`了。不幸的是，这种格式一直以来都被认为是专有的，这就意味着它没有很好文档记录，而且只能使用`Windows`库读取，所以有了`.NET Core`，而且为了跨平台，于是开发了这个新的跨平台`PDB`库
+10. `Portable PDB tables` .NET引入了一种新的符号文件（PDB）格式，主要用于跨平台
 
-6. 原始 MethodInfo
+    早期`PDB`格式是为了`C`和`C++`设计的，发展了多年以来现在已经支持`.NET`了。不幸的是，这种格式一直以来都被认为是专有的，这就意味着它没有很好文档记录，而且只能使用`Windows`库读取，所以有了`.NET Core`，而且为了跨平台，于是开发了这个新的跨平台`PDB`库
 
-   ```c++
-   typedef struct MethodInfo
-   {
-       Il2CppMethodPointer methodPointer;//指向普通执行函数
-       InvokerMethod invoker_method;//指向反射执行函数
-       const char* name;//名字
-       Il2CppClass *klass;//函数所属类指针
-       const Il2CppType *return_type;//返回值类型
-       const ParameterInfo* parameters;//参数信息
-   
-       union//generic instance method 
-       {
-           const Il2CppRGCTXData* rgctx_data; /* is_inflated is true and is_generic is false, i.e. a generic instance method */
-           const Il2CppMethodDefinition* methodDefinition;//方法定义
-       };
-   
-      
-       union//uninflated generic method 
-       {
-           const Il2CppGenericMethod* genericMethod; /* is_inflated is true */
-           const Il2CppGenericContainer* genericContainer; /* is_inflated is false and is_generic is true */
-       };
-   
-       uint32_t token;
-       uint16_t flags;
-       uint16_t iflags;
-       uint16_t slot;
-       uint8_t parameters_count;
-       uint8_t is_generic : 1; /* true if method is a generic method definition */
-       uint8_t is_inflated : 1; /* true if declaring_type is a generic instance or if method is a generic instance*/
-       uint8_t wrapper_type : 1; /* always zero (MONO_WRAPPER_NONE) needed for the debugger */
-       uint8_t is_marshaled_from_native : 1; /* a fake MethodInfo wrapping a native function pointer */
-   } MethodInfo;
-   ```
+11. 原始 MethodInfo
 
-7. 改写后的MethodInfo
-
-   ```c++
-   typedef struct MethodInfo
-   {
-       Il2CppMethodPointer methodPointer;
-       InvokerMethod invoker_method;
-       const char* name;
-       Il2CppClass *klass;
-       const Il2CppType *return_type;
-       const ParameterInfo* parameters;
-   
-       union
-       {
-           const Il2CppRGCTXData* rgctx_data; /* is_inflated is true and is_generic is false, i.e. a generic instance method */
-           const Il2CppMethodDefinition* methodDefinition;
-           const Il2CppMethodDefinition* methodMetadataHandle;
-       };
-   
-       /* note, when is_generic == true and is_inflated == true the method represents an uninflated generic method on an inflated type. */
-       union
-       {
-           const Il2CppGenericMethod* genericMethod; /* is_inflated is true */
-           const Il2CppGenericContainer* genericContainer; /* is_inflated is false and is_generic is true */
-           Il2CppMetadataGenericContainerHandle genericContainerHandle; /* is_inflated is false and is_generic is true */
-           Il2CppMethodPointer nativeFunction; /* if is_marshaled_from_native is true */
-       };
-   
-       uint32_t token;
-       uint16_t flags;
-       uint16_t iflags;
-       uint16_t slot;
-       uint8_t parameters_count;
-       uint8_t is_generic : 1; /* true if method is a generic method definition */
-       uint8_t is_inflated : 1; /* true if declaring_type is a generic instance or if method is a generic instance*/
-       uint8_t wrapper_type : 1; /* always zero (MONO_WRAPPER_NONE) needed for the debugger */
-       uint8_t is_marshaled_from_native : 1; /* a fake MethodInfo wrapping a native function pointer */
-   
-       void* interpData;
-       Il2CppMethodPointer methodPointerCallByInterp;
-       Il2CppMethodPointer virtualMethodPointerCallByInterp;
-       bool initInterpCallMethodPointer;
-       bool isInterpterImpl;
-   } MethodInfo;
-   ```
-
-8. `实例方法`（instance method）和 `静态方法`（static method）
-
-   被static修饰的方法为`静态方法`，之外的方法为`实例方法`
-
-   ```c#
-   void staticMethodTest(){
-       //直接调用静态方法
-       Boss.work();
-   
-       //创建实例
-       Boss boss = new Boss();
-       //调用实例方法
-       boss.programming();
-   }
-     
-   class Boss {
-       String name;
-       public void programming(){
-           System.out.println("I am programming.");
-       }
+    ```c++
+    typedef struct MethodInfo
+    {
+        Il2CppMethodPointer methodPointer;//指向普通执行函数
+        InvokerMethod invoker_method;//指向反射执行函数
+        const char* name;//名字
+        Il2CppClass *klass;//函数所属类指针
+        const Il2CppType *return_type;//返回值类型
+        const ParameterInfo* parameters;//参数信息
     
-       public static void work(){
-           System.out.println("I am working.");
-       }
-   }
-   ```
+        union//generic instance method 
+        {
+            const Il2CppRGCTXData* rgctx_data; /* is_inflated is true and is_generic is false, i.e. a generic instance method */
+            const Il2CppMethodDefinition* methodDefinition;//方法定义
+        };
+    
+       
+        union//uninflated generic method 
+        {
+            const Il2CppGenericMethod* genericMethod; /* is_inflated is true */
+            const Il2CppGenericContainer* genericContainer; /* is_inflated is false and is_generic is true */
+        };
+    
+        uint32_t token;
+        uint16_t flags;
+        uint16_t iflags;
+        uint16_t slot;
+        uint8_t parameters_count;
+        uint8_t is_generic : 1; /* true if method is a generic method definition */
+        uint8_t is_inflated : 1; /* true if declaring_type is a generic instance or if method is a generic instance*/
+        uint8_t wrapper_type : 1; /* always zero (MONO_WRAPPER_NONE) needed for the debugger */
+        uint8_t is_marshaled_from_native : 1; /* a fake MethodInfo wrapping a native function pointer */
+    } MethodInfo;
+    ```
+
+12. 改写后的MethodInfo
+
+    ```c++
+    typedef struct MethodInfo
+    {
+        Il2CppMethodPointer methodPointer;
+        InvokerMethod invoker_method;
+        const char* name;
+        Il2CppClass *klass;
+        const Il2CppType *return_type;
+        const ParameterInfo* parameters;
+    
+        union
+        {
+            const Il2CppRGCTXData* rgctx_data; /* is_inflated is true and is_generic is false, i.e. a generic instance method */
+            const Il2CppMethodDefinition* methodDefinition;
+            const Il2CppMethodDefinition* methodMetadataHandle;
+        };
+    
+        /* note, when is_generic == true and is_inflated == true the method represents an uninflated generic method on an inflated type. */
+        union
+        {
+            const Il2CppGenericMethod* genericMethod; /* is_inflated is true */
+            const Il2CppGenericContainer* genericContainer; /* is_inflated is false and is_generic is true */
+            Il2CppMetadataGenericContainerHandle genericContainerHandle; /* is_inflated is false and is_generic is true */
+            Il2CppMethodPointer nativeFunction; /* if is_marshaled_from_native is true */
+        };
+    
+        uint32_t token;
+        uint16_t flags;
+        uint16_t iflags;
+        uint16_t slot;
+        uint8_t parameters_count;
+        uint8_t is_generic : 1; /* true if method is a generic method definition */
+        uint8_t is_inflated : 1; /* true if declaring_type is a generic instance or if method is a generic instance*/
+        uint8_t wrapper_type : 1; /* always zero (MONO_WRAPPER_NONE) needed for the debugger */
+        uint8_t is_marshaled_from_native : 1; /* a fake MethodInfo wrapping a native function pointer */
+    
+        void* interpData;
+        Il2CppMethodPointer methodPointerCallByInterp;
+        Il2CppMethodPointer virtualMethodPointerCallByInterp;
+        bool initInterpCallMethodPointer;
+        bool isInterpterImpl;
+    } MethodInfo;
+    ```
+
+13. `实例方法`（instance method）和 `静态方法`（static method）
+
+    被static修饰的方法为`静态方法`，之外的方法为`实例方法`
+
+    ```c#
+    void staticMethodTest(){
+        //直接调用静态方法
+        Boss.work();
+    
+        //创建实例
+        Boss boss = new Boss();
+        //调用实例方法
+        boss.programming();
+    }
+      
+    class Boss {
+        String name;
+        public void programming(){
+            System.out.println("I am programming.");
+        }
+     
+        public static void work(){
+            System.out.println("I am working.");
+        }
+    }
+    ```
 
 
 ### AOT和interpreter桥接过程
@@ -397,3 +563,4 @@ git clone -b v2019-1.0.0-rc --depth=1 https://github.com/focus-creative-games/il
 ## IOS热更演示
 
 <iframe src="//player.bilibili.com/player.html?aid=606504489&bvid=BV1q84y147Xn&cid=930771458&page=1"allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
+
